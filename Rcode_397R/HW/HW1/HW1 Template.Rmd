@@ -143,9 +143,27 @@ represents the numeric stopping distance with unit "feet". The meaning of these 
 the speed and stopping distance of cars taken to stop, which were recorded in the 1920s.
 
 (c). Make a scatterplot of  `speed` vs `dist`  What do you find for the relationship between these two variables? Interpret your findings.    
+```{r}
+library(ggplot2)
+ggplot(data = cars) +
+  geom_point(mapping = aes(x = speed, y = dist))
+```
+<br>
+I noticed that as the speed of car increases, the stopping distance increases as well. In other words, it takes more distance and friction to completely stop the car's motion if the driver steps on the break. Car has more momentum if its speed is fast.
+
 
 (d). (optional)   The unit of `speed` is `mph` (miles per hour) and the unit of `dist` is `ft` (feet). Many countries  use `km` (kilometers) instead of `miles` and `m` (meters) insteal of feet. Create a different version of `cars` data in which the unit of `speed` is `kmph` (kilometers per hour) and the unit of `dist` is `m`. (1 mile $\approx$ 1.609 kilometers, 1 foot $\approx$ 0.305 meter )
 
+```{r tidyverse_library, echo = FALSE}
+library(tidyverse)
+```
+
+```{r conversion}
+car_speed_km_per_hour <- (cars$speed) * 1.609
+car_dist_meter <- (cars$dist) * 0.305
+cars_after_conversion <- data.frame(car_speed_km_per_hour,car_dist_meter)
+glimpse(cars_after_conversion)
+```
 
 
 
