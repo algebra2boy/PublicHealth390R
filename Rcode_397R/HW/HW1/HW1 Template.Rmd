@@ -1,10 +1,15 @@
 ---
 title: "390R Homework 1"
-author: ""
+author: "Yongye Tan"
 output: 
     html_document:
       number_sections: true
 ---
+
+``` {r library, echo = FALSE, message = FALSE, include = FALSE}
+library(ggplot2)
+library(tidyverse)
+```
 
 <!-- When you finish all questions, hit the Knit button above to knit this Rmd file to an HTML output file -->
 
@@ -101,10 +106,10 @@ c <- c(seq(3,100001, by=2))
 answer4 = 2 * (prod(a/b,a/c)) 
 ```
 ```{r echo=FALSE}
-print(paste("answer up to 101 is", answer2))
-print(paste("answer up to 1001 is", answer3))
-print(paste("answer up to 100001 is", answer4))
-print("I noticed that as number goes to larger and larger, it will get closer to closer the value of pi, which is 3.1415926")
+cat(paste("answer up to 101 is", answer2))
+cat(paste("answer up to 1001 is", answer3))
+cat(paste("answer up to 100001 is", answer4))
+cat("I noticed that as number gets larger and larger, it will get closer to closer the value of pi, which is 3.1415926")
 ```
 
 
@@ -144,19 +149,14 @@ the speed and stopping distance of cars taken to stop, which were recorded in th
 
 (c). Make a scatterplot of  `speed` vs `dist`  What do you find for the relationship between these two variables? Interpret your findings.    
 ```{r}
-library(ggplot2)
 ggplot(data = cars) +
-  geom_point(mapping = aes(x = speed, y = dist))
+  geom_point(mapping = aes(x = speed, y = dist), color = 'blue')
 ```
 <br>
 I noticed that as the speed of car increases, the stopping distance increases as well. In other words, it takes more distance and friction to completely stop the car's motion if the driver steps on the break. Car has more momentum if its speed is fast.
 
 
 (d). (optional)   The unit of `speed` is `mph` (miles per hour) and the unit of `dist` is `ft` (feet). Many countries  use `km` (kilometers) instead of `miles` and `m` (meters) insteal of feet. Create a different version of `cars` data in which the unit of `speed` is `kmph` (kilometers per hour) and the unit of `dist` is `m`. (1 mile $\approx$ 1.609 kilometers, 1 foot $\approx$ 0.305 meter )
-
-```{r tidyverse_library, echo = FALSE}
-library(tidyverse)
-```
 
 ```{r conversion}
 car_speed_km_per_hour <- (cars$speed) * 1.609
@@ -169,12 +169,27 @@ glimpse(cars_after_conversion)
 
 # Scatterplot of `mpg` data
 
-(a). Make a scatterplot of  `cyl` vs `displ`. What do you find for the relationship between these two variables? Interpret your findings.
-
+(a). Make a scatterplot of  `cyl` vs `displ`. What do you find for the relationship between these two variables? Interpret your findings.  
+```{r mpg}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = cyl, y = displ), color = "red")
+```
+<br>
+The variable "displ" is the engine displacement in litres and the variable "cyl" is the number of cylinders of the car. Engine displacement by definition is the measure of the cylinder volume. The relationship I noticed here is as cyl increases, displ increases as well in a constant relationship. In other words, the more cylinder volumes it requires, the higher an engine's displacement, and giving the car more power, which means it requires more cylinders to generate those 
+mechanical power. The graph also tells us that displ between 
+2.5 and 4.2 would need 6 cylinders, and displ between 4 and 7 would need 8 cylinders. 
 
 (b). Make a scatterplot of  `cty` vs `hwy`.  What do you find for the relationship between these two variables? Interpret your findings.
-
-
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = cty, y = hwy), color = "Red")
+```
+<br>
+"cty" iscuty miles per gallon, and "hwy" is the highway miles per gallon. There is a linear relationship between cty and hwy. As cty increases linearly, hwy also increases linearly. I noticed that
+driving on the highway takes more miles pers gallon than in city, meaning it costs more gas if driving in city. The reason might be 
+there more traffic and congestion area in the city, which involves
+many actions like waiting for the signal light and watching out
+pedestrian.
 
 (c). Which model is most efficient in terms of the city miles per gallon? Which model is most efficient in terms of the highway miles per gallon?
 
