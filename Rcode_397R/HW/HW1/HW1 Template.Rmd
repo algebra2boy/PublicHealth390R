@@ -185,13 +185,30 @@ ggplot(data = mpg) +
   geom_point(mapping = aes(x = cty, y = hwy), color = "Red")
 ```
 <br>
-"cty" iscuty miles per gallon, and "hwy" is the highway miles per gallon. There is a linear relationship between cty and hwy. As cty increases linearly, hwy also increases linearly. I noticed that
+"cty" is city miles per gallon, and "hwy" is the highway miles per gallon. There is a linear relationship between cty and hwy. As cty increases linearly, hwy also increases linearly. I noticed that
 driving on the highway takes more miles pers gallon than in city, meaning it costs more gas if driving in city. The reason might be 
 there more traffic and congestion area in the city, which involves
 many actions like waiting for the signal light and watching out
 pedestrian.
 
 (c). Which model is most efficient in terms of the city miles per gallon? Which model is most efficient in terms of the highway miles per gallon?
+```{r}
+city_miles_per_gallon_most_efficient = max(mpg$cty)
+city_model = mpg[mpg$cty==city_miles_per_gallon_most_efficient,]
+
+highway_miles_per_gallon_most_efficient = max(mpg$hwy)
+highway_model = mpg[mpg$hwy==highway_miles_per_gallon_most_efficient,]
+city_model
+highway_model
+```
+<br>
+```{r car_model, echo = FALSE}
+print(paste("The most efficient in terms of the city miles per gallon is", city_model$model))
+```
+```{r highway_model, echo = FALSE}
+print(paste("The most efficient in terms of the highway miles per gallon are", highway_model$model[1],
+            "and",  highway_model$model[2]))
+```
 
 
 # Calculating the distance between Paris and New York
