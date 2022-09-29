@@ -1,0 +1,293 @@
+---
+title: "390R Homework 1"
+author: "Yongye Tan"
+output: 
+    html_document:
+      number_sections: true
+---
+
+``` {r library, echo = FALSE, message = FALSE, include = FALSE}
+library(ggplot2)
+library(tidyverse)
+```
+
+<!-- When you finish all questions, hit the Knit button above to knit this Rmd file to an HTML output file -->
+
+# Divisibility
+
+(a). How many numbers from `1` to `1000` are divisible by 3? How many numbers from `1` to `1000` are not divisible by 7? (Hint: Create a vector of integers from 1 to 1000. How do you check if a number is divisible by 3? Note that if you sum up a vector of TRUE/FALSE values, TRUE is treated as a 1 and FALSE is treated as 0)
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+number_from_1_to_1000 <- c(1:1000)
+number_from_1_to_1000_divisible_by3 <- sum(c(number_from_1_to_1000%%3==0))
+number_from_1_to_1000_notdivisible_by7 <- sum(c(number_from_1_to_1000%%7!=0))
+```
+```{r echo = FALSE}
+print(paste("There are",number_from_1_to_1000_divisible_by3, "numbers from 1 to 1000 are divisible by 3"))
+print(paste("There are",number_from_1_to_1000_notdivisible_by7, "numbers from 1 to 1000 are not divisible by 7"))
+```
+
+
+
+(b). How many numbers from `1` to `1000` are divisible by both `3` and `7`? How many numbers from `1` to `1000` are divisible by  `3` but not `7`? 
+ 
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+number_from_1_to_1000_divisible_by3_and7 <- sum(c(number_from_1_to_1000%%3==0 & number_from_1_to_1000%%7==0 ))
+number_from_1_to_1000_divisible_by3_but_not7 <- sum(c(number_from_1_to_1000%%3==0 & number_from_1_to_1000%%7!=0))
+```
+```{r echo = FALSE}
+print(paste("There are",number_from_1_to_1000_divisible_by3_and7, "numbers from 1 to 1000 are divisible by 3 and 7"))
+print(paste("There are",number_from_1_to_1000_divisible_by3_but_not7, "numbers from 1 to 1000 are divisible by 3 but not 7"))
+```
+
+# Wallis product
+
+(a). Calculate
+$$
+2\cdot \left(\frac{2}{1}\cdot \frac{2}{3}\right) \left(\frac{4}{3}\cdot \frac{4}{5}\right)\left(\frac{6}{5}\cdot \frac{6}{7}\right)
+$$
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+calculation <- 2 * ((2/1)*(2/3)) * ((4/3)*(4/5)) * ((6/5)*(6/7))
+```
+```{r calculation, echo=FALSE}
+print(paste("answer equal to",calculation))
+```
+
+(b). Use the help page to find out what `prod()` function does. Define `a <- c(2,4,6)`, `b <- c(1,3,5)`,  `c <- c(3,5,7)`, can you use `a`,`b`,`c` and `prod()` to calculate the result in (a)?
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+a <- c(2,4,6)
+b <- c(1,3,5)
+c <- c(3,5,7)
+answer = 2 * (prod(a/b,a/c)) 
+```
+```{r echo = FALSE}
+print(paste("using vector and prod() will get us", answer))
+```
+
+(c). (optional) Calculate 
+$$
+2\cdot \left(\frac{2}{1}\cdot \frac{2}{3}\right) \left(\frac{4}{3}\cdot \frac{4}{5}\right)\cdots
+\left(\frac{100}{99}\cdot \frac{100}{101}\right)
+$$
+Replace `100`, `99`, `101` with larger numbers. For example, calculate 
+$$
+2\cdot \left(\frac{2}{1}\cdot \frac{2}{3}\right) \left(\frac{4}{3}\cdot \frac{4}{5}\right)\cdots
+\left(\frac{1000}{999}\cdot \frac{1000}{1001}\right)
+$$
+
+What do you find from the result?
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+a <- c(seq(2,100, by=2))
+b <- c(seq(1,99, by=2))
+c <- c(seq(3,101, by=2))
+answer2 = 2 * (prod(a/b,a/c))
+
+a <- c(seq(2,1000, by=2))
+b <- c(seq(1,999, by=2))
+c <- c(seq(3,1001, by=2))
+answer3 = 2 * (prod(a/b,a/c)) 
+
+a <- c(seq(2,100000, by=2))
+b <- c(seq(1,99999, by=2))
+c <- c(seq(3,100001, by=2))
+answer4 = 2 * (prod(a/b,a/c)) 
+```
+```{r echo=FALSE}
+cat(paste("answer up to 101 is", answer2))
+cat(paste("answer up to 1001 is", answer3))
+cat(paste("answer up to 100001 is", answer4))
+cat("I noticed that as number gets larger and larger, it will get closer to closer the value of pi, which is 3.1415926")
+```
+
+
+# Creating a data frame
+(a). Creating a data frame (shown in the orginal homework file)
+<!-- Please write down your code into the R chunk below -->
+
+```{r Q3}
+City <- c("New York", "New York", "London", "London", "Beijing", "Beijing")
+Size <- c("large", "small", "large", "small", "large", "small")
+Amount <- c(23,14,22,16,121,56)
+df <- data.frame(City, Size, Amount)
+df
+```
+
+
+(b). Extract the rows about the large partical size. Extract the rows with amount larger than 50.
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+df_size_larger_size = df[df$Size=='large',]
+df_size_larger_size
+```
+
+```{r}
+df_size_larger_than_50 = df[df$Amount>50,]
+df_size_larger_than_50
+```
+
+
+# Exploring `cars` data
+
+(a). How many observations and variables are there in the
+dataset?  
+There are 50 observations and two variables, speed and dist, in the car dataset.
+
+
+(b). What do the variables represent, and what is the meaninng of their values? (use the help page)  
+The variable "speed" represents the numeric speed with unit "mile per hours". THe variable "dist"
+represents the numeric stopping distance with unit "feet". The meaning of these values are 
+the speed and stopping distance of cars taken to stop, which were recorded in the 1920s.
+
+(c). Make a scatterplot of  `speed` vs `dist`  What do you find for the relationship between these two variables? Interpret your findings.    
+```{r}
+ggplot(data = cars) +
+  geom_point(mapping = aes(x = speed, y = dist), color = 'blue')
+```
+<br>
+I noticed that as the speed of car increases, the stopping distance increases as well. In other words, it takes more distance and friction to completely stop the car's motion if the driver steps on the break. Car has more momentum if its speed is fast.
+
+
+(d). (optional)   The unit of `speed` is `mph` (miles per hour) and the unit of `dist` is `ft` (feet). Many countries  use `km` (kilometers) instead of `miles` and `m` (meters) insteal of feet. Create a different version of `cars` data in which the unit of `speed` is `kmph` (kilometers per hour) and the unit of `dist` is `m`. (1 mile $\approx$ 1.609 kilometers, 1 foot $\approx$ 0.305 meter )
+
+```{r conversion}
+car_speed_km_per_hour <- (cars$speed) * 1.609
+car_dist_meter <- (cars$dist) * 0.305
+cars_after_conversion <- data.frame(car_speed_km_per_hour,car_dist_meter)
+glimpse(cars_after_conversion)
+```
+
+
+
+# Scatterplot of `mpg` data
+
+(a). Make a scatterplot of  `cyl` vs `displ`. What do you find for the relationship between these two variables? Interpret your findings.  
+```{r mpg}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = cyl, y = displ), color = "red")
+```
+<br>
+The variable "displ" is the engine displacement in litres and the variable "cyl" is the number of cylinders of the car. Engine displacement by definition is the measure of the cylinder volume. The relationship I noticed here is as cyl increases, displ increases as well in a constant relationship. In other words, the more cylinder volumes it requires, the higher an engine's displacement, and giving the car more power, which means it requires more cylinders to generate those 
+mechanical power. The graph also tells us that displ between 
+2.5 and 4.2 would need 6 cylinders, and displ between 4 and 7 would need 8 cylinders. 
+
+(b). Make a scatterplot of  `cty` vs `hwy`.  What do you find for the relationship between these two variables? Interpret your findings.
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = cty, y = hwy), color = "Red")
+```
+<br>
+"cty" is city miles per gallon, and "hwy" is the highway miles per gallon. There is a linear relationship between cty and hwy. As cty increases linearly, hwy also increases linearly. I noticed that
+driving on the highway takes more miles pers gallon than in city, meaning it costs more gas if driving in city. The reason might be 
+there more traffic and congestion area in the city, which involves
+many actions like waiting for the signal light and watching out
+pedestrian.
+
+(c). Which model is most efficient in terms of the city miles per gallon? Which model is most efficient in terms of the highway miles per gallon?
+```{r}
+city_miles_per_gallon_most_efficient = max(mpg$cty)
+city_model = mpg[mpg$cty==city_miles_per_gallon_most_efficient,]
+
+highway_miles_per_gallon_most_efficient = max(mpg$hwy)
+highway_model = mpg[mpg$hwy==highway_miles_per_gallon_most_efficient,]
+city_model
+highway_model
+```
+<br>
+```{r car_model, echo = FALSE}
+print(paste("The most efficient in terms of the city miles per gallon is", city_model$model))
+```
+```{r highway_model, echo = FALSE}
+print(paste("The most efficient in terms of the highway miles per gallon are", highway_model$model[1],
+            "and",  highway_model$model[2]))
+```
+
+
+# Calculating the distance between Paris and New York
+Suppose you have geographical data and want to calculate the distance between two places on earth, given by their latitude and longitude coordinates. Consider the coordinates for:
+
+* Paris: 48.8566° N (latitude), 2.3522° E (longitude), and
+* New York 40.7128° N (latitude), 74.0060° W (longitude)
+
+You can look up "Great-circle distance" on Wikipedia, and use the spherical law of cosines to find the distance. Let's do this in four steps. We will use the following common abbreviations:
+
+* latitude ($\phi$) `phi`
+* longitude ($\lambda$) `lambda`
+
+(a). Create 4 objects `phi.paris`, `phi.ny`, `lambda.paris`, `lambda.ny`, representing these coordinates. Because New York is located in the West, you have to enter this as a negative value (-74.0060). 
+
+```{r degrees}
+phi.paris <- 48.8566
+phi.ny <- 40.7128
+lambda.paris <- 2.3522
+lambda.ny <- -74.0060
+```
+
+```{r echo = FALSE}
+print(paste("The latitude of Paris in degree", phi.paris))
+print(paste("The latitude of New York in degree", phi.ny))
+print(paste("The longtitude of Paris in degree", lambda.paris))
+print(paste("The longtitude of New York in degree", lambda.ny))
+```
+
+(b). Convert the 4 coordinates from degrees to radians:
+$$
+radians = degrees \times \frac{\pi}{180}.
+$$
+
+```{r radians}
+phi.paris_radian <- 48.8566 * (pi/180) # phi 1
+phi.ny_radian <- 40.7128 *  (pi/180) #  phi 2
+lambda.paris_radian <- 2.3522 *  (pi/180) # lambda 1
+lambda.ny_radian <- -74.0060 *  (pi/180)  # lambda 2
+```
+```{r echo = FALSE}
+print(paste("The latitude of Paris in radian", phi.paris_radian))
+print(paste("The latitude of New York in radian", phi.ny_radian))
+print(paste("The longtitude of Paris in radian", lambda.paris_radian))
+print(paste("The longtitude of New York in radian", lambda.ny_radian))
+```
+
+
+(c). Calculate the central angle ($\Delta \sigma$) between both cities, using the spherical law of cosines:
+$$
+\Delta \sigma = \arccos(\sin \phi_1 \sin \phi_2+\cos \phi_1 \cos \phi_2 cos(\Delta \lambda)),
+$$
+where: $\phi_1$ is the latitude of Paris, 
+$\phi_2$ the latitude of New York, and $\Delta \lambda$ is the absolute difference between both longitudes. (Hint: For this calculation you need the following mathematical functions in R: `sin`, `cos`, `acos`, and `abs`.)
+```{r central angle}
+central_angle = acos(sin(phi.paris_radian) * sin(phi.ny_radian)
+                    + cos(phi.paris_radian) * cos(phi.ny_radian)
+                    * cos(abs(lambda.ny_radian-lambda.paris_radian)))
+```
+```{r echo=FALSE}
+print(paste("central angle between cities are", central_angle))
+```
+
+
+(d). To find the distance, multiply $\Delta \sigma$ by the radius of the earth (6371 km.)
+
+```{r distance_NY_Paris}
+distance_between_both_NY_and_Paris_km <- central_angle * 6371 # 6371 km is the radius of Earth
+```
+
+```{r echo=FALSE}
+print(paste("The distance between both cities are", distance_between_both_NY_and_Paris_km, "km"))
+distance_between_both_NY_and_Paris_mile = distance_between_both_NY_and_Paris_km * 0.621371
+print(paste("The distance between both cities are", distance_between_both_NY_and_Paris_mile, "miles"))
+```
+
+
