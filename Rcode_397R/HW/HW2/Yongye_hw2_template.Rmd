@@ -1,0 +1,236 @@
+---
+title: "390R Homework 2"
+author: ""
+output: 
+    html_document:
+      number_sections: true
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(nycflights13)
+```
+
+
+<!-- When you finish all questions, hit the Knit button above to knit this Rmd file to an HTML output file -->
+
+# Exploring `flights` and `weather` dataset
+
+**a.**
+How many observations and variables are in the `flights` and `weather` dataset?
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+paste("There are", nrow(flights), "observation and", ncol(flights), "variables in flights dataset")
+paste("There are", nrow(weather), "observation and", ncol(weather), "varibales in weather dataset")
+
+```
+
+
+**b.**
+Find out the meanings of `origin`, `carrier`, `dep_delay` and `dep_time` in the `flights` dataset and meanings of `visib`, `time_hour`, and `temp` in the `weather` dataset.
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+print("In the flights dataset: ")
+print("origin: origin of the airport")
+print("carrier: two letter carrier abbreviation")
+print("dep_delay: departure delays in minutes")
+print("dep_time: actual departure time ")
+
+print("In the weather dataset:")
+print("visib: Visibility in miles")
+print("time_hour: Data and hour of the recording as POSIXct date")
+print("temp: temperature in F")
+
+```
+
+**c.**
+From the `dep_time` in the `flights` data, how many flights departed in the morning (before noon), in the afternoon (noon to 5:59 pm), and in the evening (6:00 pm or later), respectively? 
+(Note: the data contain `NA` value which means missing. For this question, we will ignore the observations with missing departure time. Try the `na.rm` argument in the `sum()` function to get rid of the `NA` values.)
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+# clean the data with NA value
+f = flights[!is.na(flights$dep_time),]
+morning_flight = f[f$dep_time>=1 & f$dep_time<=1159,]
+afternoon_flight = f[f$dep_time>=1200 & f$dep_time<=1759,]
+evening_flight = f[f$dep_time>=1800 & f$dep_time<=2400,]
+
+print("There are 131023 flights departed in the morning")
+print("There are 120761 flights departed in the afternoon")
+print("There are 76737 flights departed in the evening")
+
+```
+
+# Scatterplot
+The `flights` dataset is very large. We will be working with a subset of it in this question. Add a code chunk with the following codes. This will extract the data for observations with `carrier == AS` (Alaska Airlines). We will learn these codes later in the course.
+
+<!-- Please change {r, eval=FALSE} to {r} in the R chunk below and continue to answer the question -->
+
+```{r}
+alaska_flights <- flights %>% filter(carrier == "AS") %>% filter(!is.na(arr_delay))
+```
+
+**a.**
+Make a scatterplot of `dep_delay` and `arr_delay` in the `alaska_flights` data. What do you find about the relationship between these two variable? What are some practical reasons for this relationship?
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+library(ggplot2)
+ggplot(data = alaska_flights, aes(x = arr_delay,y= dep_delay)) + 
+  geom_point() +
+  geom_smooth(se = FALSE) 
+```
+
+I noticed as departure delay times in minutes increases arrival delay times also increases. Reasons for this to happen because if a flight arrives late it would take longer for the flight to reach the destination, or wait extra longer for people checking in, or take some time to fuel the gasoline for the airplane. A lot of data are around (0,0), meaning most flights arrive and leave on time.
+**b.**
+There is a cluster of points near `(0, 0)`. What does (0, 0) correspond to in terms of the Alaska Air flights? Use the techniques learned from class to address this overplotting issue.
+
+<!-- Please write down your code into the R chunk below -->
+(0,0) in terms of the Alaska Air flights means there is zero departure delay for 
+zero arrival delay in minute. 
+```{r}
+ggplot(data = alaska_flights, aes(x = dep_delay,y= arr_delay)) + 
+  geom_point() +
+  geom_smooth(se = FALSE) + 
+  geom_jitter()
+```
+
+# Linegraphs
+For this question, we will work on a subset of weather data. Add a chunk with the following codes to extract the weather data for EWR airport in January.
+
+<!-- Please change {r, eval=FALSE} to {r} in the R chunk below and continue to answer the question -->
+
+```{r}
+early_january_weather <- weather %>% filter(origin == "EWR" & month == 1)
+```
+
+**a.**
+For the `early_january_weather` data, create a linegraph with `time_hour` on the x-axis and `temp` on the y-axis. What do you find from the plot?
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+ggplot(data = early_january_weather) + 
+  geom_line(mapping = aes(x = time_hour, y = temp))
+```
+
+<br>
+I find the at the beginning of December, the temperature is around 40F, then it keeps going up and down from 30F to 50F. When it is around January 25th, there is a huge 
+decrease to around 10 F, an indication of snowing. Then the temp starts increases all
+the way up to 60F, maybe an indication that spring is coming or changing of a season.
+**b.**
+Linegraphs are frequently used when time is the variable on the x-axis. These are called time series plots. Make a time series plot of a variable in the weather data other than `temp.` Describe your findings.
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+ggplot(data = early_january_weather) + 
+  geom_line(mapping = aes(x = time_hour, y = wind_speed))
+  
+```
+<br>
+I noticed the windspeech from beginning of the year to the end of January, overall, is pretty low in mile per hour. Then it suddenly increases to a very high speed. I assume that the cold weather, snow, and fogs stop the flow of wind. Once it starts changing 
+seasons, those barrie are gone, so more wind is able to flow into the air 
+<br>
+
+# Histograms
+In this question, we will work with the weather_obs data created from the following codes. This removes the observations with missing data in the weather data.
+
+<!-- Please change {r, eval=FALSE} to {r} in the R chunk below and continue to answer the question -->
+
+```{r}
+weather_obs <- weather %>% filter(!is.na(temp))
+```
+
+**a.**
+Create a histogram for `temp` in the `weather` data with white vertical borders for the bins. Describe the distribution of `temp` based on the histogram. You can try different bin settings.
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+ggplot(data = weather) +
+  geom_histogram(mapping = aes(temp), color = "white", bins = 30)
+
+```
+The histogram has a bell curve, which is a normal distribution graph. Most temperature 
+is clusted from 40 to 60 F. 
+
+**b.**
+Use faceted graph to plot the histograms for each of the 12 months. Compare the distributions of the temperature in different months.
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+ggplot(weather)+
+  geom_histogram(mapping = aes(x=temp),color="white", bins = 30)+
+      facet_wrap(~month)
+```
+The graph tells us that temperature starts shifting from low temp to high temp as month increases from January to August. Then it starts shifting back to low temp after August. From Jan to March, it has a skew to right distribution, April has a normal curve. From May to December, it all has a sket to right distribution.
+
+# Boxplots
+**a.**
+Create a boxplot for `temp` in the `weather` data. Describe the distribution of `temp` based on the plot (you can use `summary()` function to get more information about `temp`)
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+ggplot(data = weather) + 
+  geom_boxplot(mapping = aes(y=temp))
+```
+```{r}
+summary(weather$temp)
+```
+min is 10.94, median is 55.40, mean is 55.25, max is 100.5 and min is 10.94 -- all units are F in temperature. 
+
+**b.**
+Try the following code, did you get what you expect? Make some changes to it to create a boxplot of temp split by month. Which months have the lowest and highest variability in temperature? (Hint: Check the type of `month` and search for functions to change its type.)
+
+<!-- Please change {r, eval=FALSE} to {r} in the R chunk below and continue to answer the question -->
+
+```{r}
+ggplot(data = weather, mapping = aes(x = month, y = temp)) +
+  geom_boxplot() + 
+  facet_wrap(~month, ncol=6)
+print("Eyespotting on the graph, I think the April, October, December have the highest variability in temperature, and August has lowest variability in temperature")
+```
+# Barplots
+**a.**
+Create a barplot of `carrier` in the `flights` data. Which airline has the second highest share of flights (departed from NYC in 2013)? You may need to look at the `airlines` dataset to know which `airlines` correspond to which carrier codes.
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+ggplot(data = flights)+
+  geom_bar(mapping = aes(x=carrier))
+print("JetBlue Airways has the second highest share of flights ")
+```
+
+**b.**
+There are three airports in NYC: LGA, JFK and EWR. Creat a barplot of `flights` split by `origin` with appropriate position adjustment. Find out the airlines that have a highest share of flights departed from the three airports, respectively.
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+ggplot(data = flights)+
+  geom_bar(mapping = aes(x=carrier, fill = origin), position = "dodge")
+print("B6, Jetblue, has the highest share of flights departed from JFK, UA, United Airline, has the highest share of flights departed from EWR, DL, Delta Airline, has the highest share of flights departed from LGA.")
+```
+
+**c.**
+(optional) It is hard to get the exact number from the figures. Use `table()` function to obtain the number of flights for each airline and use `sort()` function to find the top 5 airlines. Then, find the top 5 airlines in terms of the flights departed from the three airports, respectively.
+
+<!-- Please write down your code into the R chunk below -->
+
+```{r}
+sort(table(flights$carrier))
+table(flights$carrier, flights$origin)
+print("Top 5 airlines for JFK airport from highest to lowest: B6, DL, 9E, AA, MQ")
+print("Top 5 airlines for EWR airpot from highest to lowest: UA, EV, B6, WN, US")
+print("Top 5 airlines for LGA airpot from highest to lowest: DL, MQ, AA, US, EV")
+```
