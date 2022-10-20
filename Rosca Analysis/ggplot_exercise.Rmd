@@ -1,0 +1,206 @@
+---
+title: "Data Visulization: Real Data Analysis"
+output: 
+  html_document:
+    number_sectios: true
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE,eval=TRUE)
+```
+
+## Health savings experiments
+
+<font size="3">
+To understand why the poor are constrained in their ability to save for investments in preventative health products, two researchers designed a field experiment in rural Kenya in which they randomly varied access to four innovative saving technologies. By observing the impact of these various technologies on asset accumulation, and by examining which types of people benefit most from them, the researchers were able to identify the key barriers to saving.  This exercise is based on: 
+
+Dupas, Pascaline and Jonathan Robinson. 2013. "[Why Don't the Poor Save More? Evidence from Health Savings Experiments.](http://dx.doi.org/10.1257/aer.103.4.1138)" *American Economic Review*, Vol. 103, No. 4, pp. 1138-1171.
+
+They worked with 113 ROSCAs (Rotating Savings and Credit Associations). A ROSCA is a group of individuals who come together and make regular cyclical contributions to a fund (called the “pot”), which is then given as a lump sum to one member in each cycle. In their experiment, Dupas and Robinson randomly assigned 113 ROSCAs to one of the five study arms. In this exercise, we will focus on three study arms (one control and two treatment arms). The data file, `rosca.csv` is extracted from their original data, excluding individuals who have received multiple treatments for the sake of simplicity.
+
+Individuals in all study arms were encouraged to save for health and were asked to set a health goal for themselves at the beginning of the study.  In the first treatment group (*Safe Box*), respondents were given a box locked with a padlock, and the key to the padlock was provided to the participants. They were asked to record what health product they were saving for and its cost. This treatment is designed to estimate the effect of having a safe and designated storage technology for preventative health savings.  
+
+In the second treatment group (*Locked Box*), respondents were given a locked box, but not the key to the padlock. The respondents were instructed to call the program officer once they had reached their saving goal, and the program officer would then meet the participant and open the *Locked Box* at the shop where the product is purchased. Compared to the safe box, the locked box offered stronger commitment through earmarking (the money saved could only be used for the prespecified purpose). 
+
+Participants are interviewed again 6 months and 12 months later. In this exercise, our outcome of interest is the amount (in Kenyan shilling) spent on preventative health products after 12 months.
+
+Descriptions of the relevant variables in the data file `rosca.csv` are:
+</font> 
+
+--------------------------------------------------------------------------------------------
+ Name                             Description
+ -------------------------------- ----------------------------------------------------------
+ `bg_female`                      `1` if female, and `0` otherwise
+ 
+ `bg_married`                     `1` if married, and `0` otherwise
+ 
+ `bg_b1_age`                      age at baseline
+ 
+ `encouragement`                  `1` if encouragement only (control group), and `0` otherwise 
+ 
+ `safe_box`                       `1` if safe box treatment, and `0` otherwise
+ 
+ `locked_box`                     `1` if lock box treatment, and `0` otherwise
+ 
+ `fol2_amtinvest`                 Amount invested in health products         
+ 
+ `has_followup2`                  `1` if appears in 2nd followup (after 12 months), and `0` otherwise
+--------------------------------------------------------------------------------------------
+
+
+
+## Load data
+First, we need to load the data in R. The data is in the form of a csv file. We can use the following code to read the data.
+```{r eval=FALSE}
+rosca <-  read_csv("rosca.csv")
+```
+In the `read_csv` function above, you need  to enter the diretory of the data file on your own computor. It will look like this `/Users/Zhichao/lectures/data\ visualization/data/rosca.csv`.
+For MAC users, you can drag the file to the terminal to get the directory; for Windows users, go to the folder that contains the file, click at the end of the box that has the directory like "user> name> xxx> xxxx>". This highlights the full path to the folder. You need to remove `eval=FALSE` in the code chunk above after entering the your file directory.
+
+We need to make some changes to  have the data ready for plots. You need to remove `eval=FALSE` in the following code chunk.
+```{r eval=FALSE}
+rosca$treatment <- NA
+rosca$treatment[rosca$encouragement == 1] <- "control"
+rosca$treatment[rosca$safe_box == 1] <- "safebox"
+rosca$treatment[rosca$locked_box == 1] <- "lockbox"
+rosca$treatment <- as.factor(rosca$treatment)
+rosca <-  rosca[rosca$has_followup2 == 1, ]
+rosca$bg_female <-  factor(rosca$bg_female )
+rosca$bg_married <-  factor(rosca$bg_married )
+```
+In the above code, we creat a variable to indicate the treatment and subset the data so that it contains only participants who were interviewed in 12 months during the second followup.
+
+
+
+# Analyzing the data
+
+We will use our data visualization techniques to conduct an analysis for this dataset step by step.
+
+You may find that some tasks require something you have not learned before. This happens a lot when you are doing a real data analysis. Use the help page, google, stackoverflow, or any other resources to find a solution. In some sense, this is the key ability you need to acquire from the course.
+
+## Task 1
+How many obervations and variables are in the data. What are the meanings of `bg_female`, `bg_married`, `treatment`,`fol2_amtinvest`? Get some summary statistics of these variables.
+There are 393 obervations and 10 variables in the data. The meanings of 'bg_female' is
+1 if female, and 0 otherwise. 'bg_married' is 1 if married, and 0 othersie. 'treatment'
+is safebox or lock box. 'fol2_amtinvest' is amount invested in health products.
+
+```{r}
+summary(rosca$bg_female)
+summary(rosca$bg_married)
+summary(rosca$fol2_amtinvest)
+```
+
+## Task 2
+Draw two bar charts to show the number and the proportion of individuals under each of the three treatment conditions. 
+```{r}
+# show the number of individuals 
+ggplot(data = rosca) + 
+  geom_bar(mapping = aes(treatment))
+
+# show the proportion of individuals using special formula
+ggplot(data = rosca, mapping = aes(treatment)) + 
+  geom_bar(aes(y = (..count..)/sum(..count..)))
+
+# show the proportion using the group function
+ggplot(data = rosca, mapping = aes(treatment)) + 
+  geom_bar(aes(y = ..prop.., group = 1))
+```
+
+
+## Task 3
+If the three treatment arms are randomly assignd, then the gender distribution should be similar under the three arms.
+Use a bar chart to show the gender distribution  within each treatment condition
+
+* use `fill` aesthetic to separate the gender within each bar. Try different position adjustment. Which treatment condition has the highest female proportion?
+```{r}
+ggplot(data = rosca) + 
+  geom_bar(mapping = aes(treatment, fill = bg_female), position = "dodge")
+```
+
+* add a  title  for the graph and remove the labels of `x`-axis `y`-axis
+```{r}
+ggplot(data = rosca) + 
+  geom_bar(mapping = aes(treatment, fill = bg_female), position = "dodge") + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.title.y = element_blank()) + 
+  labs(
+    title = "gender distribution vs. treatment"
+  )
+```
+
+* How to center the title? A naive way is to manualy add spaces. Try to use google to find a solution.
+```{r}
+ggplot(data = rosca) + 
+  geom_bar(mapping = aes(treatment, fill = bg_female), position = "dodge") + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.title.y = element_blank()) + 
+  labs(
+    title = "gender distribution vs. treatment"
+  ) + 
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+* Can you make the title in bold? 
+```{r}
+ggplot(data = rosca) + 
+  geom_bar(mapping = aes(treatment, fill = bg_female), position = "dodge") + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.title.y = element_blank()) + 
+  labs(
+    title = "gender distribution vs. treatment"
+  ) + 
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+```
+
+
+
+
+* The legends are not intuitive enough. We can change the legend title to `gender` and the labels to `male` and `female`. Use google to find a solution. (You could search "change legend title in ggplot" and "rename legend labels in ggplot")
+```{r}
+
+```
+
+
+## Task 4
+* Try a similar analysis using  the `bg_married` variable
+
+##  Task 5
+* Does receiving a safe box or lockbox increase the amount invested in health products? We focus on the outcome measured 12 months from baseline during the second follow-up `fol2_amtinvest`. Use boxplot to summarize the distribution of `fol2_amtinvest` for each treatment condition.
+
+
+
+* There might be some extreme values which make it hard to compare the different treatment conditions. Zoom in to make the three boxplots easier for comparison
+
+```{r}
+```
+
+* Are the results similar for different groups of people (e.g., married versus unmarried, male versus female)? Use faceted graphs to get the answer.
+```{r}
+```
+
+* The labels for facets are not clear. Find out how to change the labels in `facet_grid`
+
+```{r}
+```
+
+## Task 6
+
+* What is the relationship between age and  the amount of investment in hospital products？Use `geom_smooth` to show the relationship between `age` and `fol2_amtinvest` for each of the three treatment groups.
+```{r}
+
+```
+
+
+
+* Compare setting the limits of the y-axis using `scale_y_continuous` and `coord_cartesian`
+```{r}
+
+```
+
+
+
+
+
+
+
