@@ -1,0 +1,169 @@
+---
+title: "Homework3"
+author: "Yongye Tan"
+date: "10/22/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(nycflights13)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+``` {r}
+rosca <- read.csv("rosca.csv")
+```
+
+``` {r}
+rosca$treatment <- NA
+rosca$treatment[rosca$encouragement == 1] <- "control"
+rosca$treatment[rosca$safe_box == 1] <- "safebox"
+rosca$treatment[rosca$locked_box == 1] <- "lockbox"
+rosca$treatment <- as.factor(rosca$treatment)
+rosca <-  rosca[rosca$has_followup2 == 1, ]
+rosca$bg_female <-  factor(rosca$bg_female )
+rosca$bg_married <-  factor(rosca$bg_married)
+```
+
+### 1
+a. Use a bar chart to show the distribution of bg_married within each treatment condition. Which treatment condition has the highest proportion of married people? (Note: you need to add appropriate title, labels of axes, lengend name, and change the names of the two levels in the legend.)
+
+The lockbox treament condition has the highest proportion of married people, as shown with the blue color.
+```{r}
+ggplot(data = rosca) + 
+  geom_bar(mapping = aes(treatment, fill = bg_female), 
+           position = "dodge") + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.title.y = element_blank()) + 
+  # add a title 
+  labs(
+    title = "Distribution of marital status"
+  ) + 
+  # center the title and bold it
+  theme(plot.title = element_text(hjust = 0.5, face = "bold")) + 
+  # change the legend label title and name
+  scale_fill_discrete(name = "marital status",
+                      labels = c("unmarried", "married"))
+```
+
+### b.
+The barplots do not contain the exact numbers or proportions so we can add them to make the figure more informative. Make the following plot. Use geom_text to add the percentage for each bar (You don’t need to be perfect for the position of the annotation). The following codes calculate the counts and proportions of unmarried people under control, married people under control, unmarried people under lockbox, married people under lockbox, unmarried people under safebox, and married people under safebox. You need to change the proportions to the percentages. (You can use other methods for this. Check function percent() in scales package )
+``` {r eval=FALSE}
+y <- as.numeric(t(table(rosca$treatment,rosca$bg_married)))
+prop <- table(rosca$treatment,rosca$bg_married)/length(rosca$treatment)
+prop <- as.numeric(t(prop))
+```
+
+```{r}
+ggplot(data = rosca) + 
+  geom_bar(mapping = aes(treatment, fill = bg_female), 
+           position = "dodge") + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.title.y = element_blank()) + 
+  # add a title 
+  labs(
+    title = "Distribution of marital status"
+  ) + 
+  # center the title and bold it
+  theme(plot.title = element_text(hjust = 0.5, face = "bold")) + 
+  # change the legend label title and name
+  scale_fill_discrete(name = "marital status",
+                      labels = c("unmarried", "married")) 
++ geom_text(mapping = )
+```
+
+#2 
+```{r}
+# filter out the temp that is na
+weather <- weather %>% filter(!is.na(temp))
+temp.facet <- ggplot(data = weather)+
+  geom_histogram(mapping = aes(x = temp),color= "white",binwidth = 5)+
+  # total 4 rows
+  facet_wrap(~month,nrow=4)
+temp.facet
+```
+a. Add appropriate title and labels of axes. Remove the y-axis ticks and tick labels (200,400…)
+
+```{r}
+temp.facet+ labs(
+  title = "Temperature in 12 months",
+  x = "Temperature (in Fahrenheit)",
+  # remove the y-axis ticks
+  y = NULL) + 
+  # remove the y tick labels
+  scale_y_continuous(labels = NULL)
+```
+b. Change the facet labels from numeric month to month abbreviations, e.g., 1 to Jan.
+```{r}
+# c(1,2,3,4,5,6,7,8,9,10,11,12)
+month_label <- c (
+                '1' = "Jan", '2' = "Feb",'3' = "Mar",'4' = "Apr",
+                '5' = "May", '6' = "Jun",'7' = "Jul",'8' = "Aug",
+                '9' = "Sep", '10' = "Oct",'11' = "Nov",'12' = "Dec")
+
+
+month_label_plot <- ggplot(data = weather)+
+  geom_histogram(mapping = aes(x = temp),color= "white",binwidth = 5) +
+  # total 4 rows
+  facet_wrap(~month,
+             nrow=4,
+             # match the label to the new label
+             labeller = as_labeller(month_label))+ 
+  labs(
+      title = "Temperature in 12 months",
+      x = "Temperature (in Fahrenheit)",
+      y = NULL) + 
+      scale_y_continuous(labels = NULL) 
+  
+```
+c. We can add the average termperature for each month to make the firgure more informative. Make the following plot. You can use round(tapply(weather$temp, factor(weather$month),mean)) to obtain the average temperature of each month.
+
+```{r}
+month_label_plot + 
+  geom_label()
+```
+
+
+
+
+# 3
+a. Remove the x-axis label, and change the tick labels from numeric month to month abbreviation as in the following plot.
+
+```{r }
+ggplot(data = weather, mapping = aes(x= factor(month),y = temp)) +
+  geom_boxplot()
+```
+
+a. Remove the x-axis label, and change the tick labels from numeric month to month abbreviation as in the following plot.
+
+```{r}
+
+month_label <- c (
+                '1' = "Jan", '2' = "Feb",'3' = "Mar",'4' = "Apr",
+                '5' = "May", '6' = "Jun",'7' = "Jul",'8' = "Aug",
+                '9' = "Sep", '10' = "Oct",'11' = "Nov",'12' = "Dec")
+ggplot(data = weather, mapping = aes(x= factor(month),y = temp)) +
+  geom_boxplot() + 
+  labs(x= NULL) + 
+  # since these month are discrete
+  scale_x_discrete(label = month_label)
+
+```
+b. Remove the y-axis label, and change the tick labels on the y-axis as in the following plot.
+
+```{r}
+month_label <- c (
+                '1' = "Jan", '2' = "Feb",'3' = "Mar",'4' = "Apr",
+                '5' = "May", '6' = "Jun",'7' = "Jul",'8' = "Aug",
+                '9' = "Sep", '10' = "Oct",'11' = "Nov",'12' = "Dec")
+
+temperature_label <- c (
+  "25" = "25F", "50" = "50F", "75" = "75F", "100" = "100F")
+ggplot(data = weather, mapping = aes(x= factor(month),y = temp)) +
+  geom_boxplot() + 
+  labs(x= NULL) + 
+  # since these months are discrete
+  scale_x_discrete(label = month_label) + 
+  scale_y_(label = temperature_label)
+```
