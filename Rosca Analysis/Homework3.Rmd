@@ -26,7 +26,8 @@ rosca$bg_female <-  factor(rosca$bg_female )
 rosca$bg_married <-  factor(rosca$bg_married)
 ```
 
-### 1
+# 1
+
 a. Use a bar chart to show the distribution of bg_married within each treatment condition. Which treatment condition has the highest proportion of married people? (Note: you need to add appropriate title, labels of axes, lengend name, and change the names of the two levels in the legend.)
 
 The lockbox treament condition has the highest proportion of married people, as shown with the blue color.
@@ -49,7 +50,7 @@ ggplot(data = rosca) +
 
 ### b.
 The barplots do not contain the exact numbers or proportions so we can add them to make the figure more informative. Make the following plot. Use geom_text to add the percentage for each bar (You don’t need to be perfect for the position of the annotation). The following codes calculate the counts and proportions of unmarried people under control, married people under control, unmarried people under lockbox, married people under lockbox, unmarried people under safebox, and married people under safebox. You need to change the proportions to the percentages. (You can use other methods for this. Check function percent() in scales package )
-``` {r eval=FALSE}
+``` {r }
 y <- as.numeric(t(table(rosca$treatment,rosca$bg_married)))
 prop <- table(rosca$treatment,rosca$bg_married)/length(rosca$treatment)
 prop <- as.numeric(t(prop))
@@ -70,7 +71,6 @@ ggplot(data = rosca) +
   # change the legend label title and name
   scale_fill_discrete(name = "marital status",
                       labels = c("unmarried", "married")) 
-+ geom_text(mapping = )
 ```
 
 #2 
@@ -83,6 +83,7 @@ temp.facet <- ggplot(data = weather)+
   facet_wrap(~month,nrow=4)
 temp.facet
 ```
+
 a. Add appropriate title and labels of axes. Remove the y-axis ticks and tick labels (200,400…)
 
 ```{r}
@@ -94,6 +95,7 @@ temp.facet+ labs(
   # remove the y tick labels
   scale_y_continuous(labels = NULL)
 ```
+
 b. Change the facet labels from numeric month to month abbreviations, e.g., 1 to Jan.
 ```{r}
 # c(1,2,3,4,5,6,7,8,9,10,11,12)
@@ -115,20 +117,19 @@ month_label_plot <- ggplot(data = weather)+
       x = "Temperature (in Fahrenheit)",
       y = NULL) + 
       scale_y_continuous(labels = NULL) 
-  
+month_label_plot
 ```
+
 c. We can add the average termperature for each month to make the firgure more informative. Make the following plot. You can use round(tapply(weather$temp, factor(weather$month),mean)) to obtain the average temperature of each month.
 
 ```{r}
-month_label_plot + 
-  geom_label()
+
 ```
 
 
 
 
 # 3
-a. Remove the x-axis label, and change the tick labels from numeric month to month abbreviation as in the following plot.
 
 ```{r }
 ggplot(data = weather, mapping = aes(x= factor(month),y = temp)) +
@@ -147,9 +148,9 @@ ggplot(data = weather, mapping = aes(x= factor(month),y = temp)) +
   geom_boxplot() + 
   labs(x= NULL) + 
   # since these month are discrete
-  scale_x_discrete(label = month_label)
-
+  scale_x_discrete(label = month_label) 
 ```
+
 b. Remove the y-axis label, and change the tick labels on the y-axis as in the following plot.
 
 ```{r}
@@ -158,12 +159,39 @@ month_label <- c (
                 '5' = "May", '6' = "Jun",'7' = "Jul",'8' = "Aug",
                 '9' = "Sep", '10' = "Oct",'11' = "Nov",'12' = "Dec")
 
-temperature_label <- c (
-  "25" = "25F", "50" = "50F", "75" = "75F", "100" = "100F")
 ggplot(data = weather, mapping = aes(x= factor(month),y = temp)) +
   geom_boxplot() + 
-  labs(x= NULL) + 
+  labs(x= NULL,
+       y = NULL) + 
   # since these months are discrete
-  scale_x_discrete(label = month_label) + 
-  scale_y_(label = temperature_label)
+  scale_x_discrete(label = month_label) +
+  # have to set the y axis mannually and and change the label mannually
+  scale_y_continuous(breaks = seq(0, max(weather$temp, na.rm=TRUE), by = 25),
+                     label = c("0" = "0F",
+                               "25" = "25F",
+                               "50" = "50F",
+                               "75" = "75F",
+                               "100" = "100F"))
+```
+
+c. (optional) We can make it better by adding the degree symbol. Make the following plot.
+```{r}
+month_label <- c (
+                '1' = "Jan", '2' = "Feb",'3' = "Mar",'4' = "Apr",
+                '5' = "May", '6' = "Jun",'7' = "Jul",'8' = "Aug",
+                '9' = "Sep", '10' = "Oct",'11' = "Nov",'12' = "Dec")
+
+ggplot(data = weather, mapping = aes(x= factor(month),y = temp)) +
+  geom_boxplot() + 
+  labs(x= NULL,
+       y = NULL) + 
+  # since these months are discrete
+  scale_x_discrete(label = month_label) +
+  # have to set the y axis mannually and and change the label mannually
+  scale_y_continuous(breaks = seq(0, max(weather$temp, na.rm=TRUE), by = 25),
+                     label = c("0" = "0°F",
+                               "25" = "25°F",
+                               "50" = "50°F",
+                               "75" = "75°F",
+                               "100" = "100°F"))
 ```
