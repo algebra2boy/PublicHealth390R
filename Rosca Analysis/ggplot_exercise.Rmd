@@ -81,13 +81,14 @@ You may find that some tasks require something you have not learned before. This
 
 ## Task 1
 How many obervations and variables are in the data. What are the meanings of `bg_female`, `bg_married`, `treatment`,`fol2_amtinvest`? Get some summary statistics of these variables.
+
 There are 393 obervations and 10 variables in the data. The meanings of 'bg_female' is
 1 if female, and 0 otherwise. 'bg_married' is 1 if married, and 0 othersie. 'treatment'
 is safebox or lock box. 'fol2_amtinvest' is amount invested in health products.
 
 ```{r}
 summary(rosca$bg_female)
-summary(rosca$bg_married)
+summary(rosca$treatment)
 summary(rosca$fol2_amtinvest)
 ```
 
@@ -158,37 +159,98 @@ ggplot(data = rosca) +
 
 * The legends are not intuitive enough. We can change the legend title to `gender` and the labels to `male` and `female`. Use google to find a solution. (You could search "change legend title in ggplot" and "rename legend labels in ggplot")
 ```{r}
-
+ggplot(data = rosca) + 
+  geom_bar(mapping = aes(treatment, fill = bg_female), position = "fill") + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.title.y = element_blank()) + 
+  labs(
+    title = "gender distribution vs. treatment",
+    x = "",
+    y = ""
+  ) + 
+  theme(plot.title = element_text(hjust = 0.5, face = "bold")) + 
+  scale_fill_discrete(name = "gender",
+                      labels = c("male", "female")) 
+  
 ```
-
 
 ## Task 4
 * Try a similar analysis using  the `bg_married` variable
 
+```{r }
+ggplot(data = rosca) + 
+  geom_bar(mapping = aes(treatment, fill = bg_married), position = "dodge") + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.title.y = element_blank()) + 
+  labs(
+    title = "gender distribution vs. treatment"
+  ) + 
+  theme(plot.title = element_text(hjust = 0.5, face = "bold")) + 
+  scale_fill_discrete(name = "marital status",
+                      labels = c("unmarried", "married"))
+  
+```
+
+
 ##  Task 5
 * Does receiving a safe box or lockbox increase the amount invested in health products? We focus on the outcome measured 12 months from baseline during the second follow-up `fol2_amtinvest`. Use boxplot to summarize the distribution of `fol2_amtinvest` for each treatment condition.
-
+``` {r}
+  ggplot(data = rosca, mapping = aes(x= factor(treatment),y = fol2_amtinvest)) + 
+  geom_boxplot()
+```
 
 
 * There might be some extreme values which make it hard to compare the different treatment conditions. Zoom in to make the three boxplots easier for comparison
 
 ```{r}
+  ggplot(data = rosca, mapping = aes(x= factor(treatment),y = fol2_amtinvest)) + 
+  geom_boxplot() + 
+  # zoom in the y coordinate
+  scale_y_continuous(limits = c(0, 1800))
+
 ```
 
 * Are the results similar for different groups of people (e.g., married versus unmarried, male versus female)? Use faceted graphs to get the answer.
 ```{r}
+ggplot(data = rosca, mapping = aes(x= factor(treatment),y = fol2_amtinvest)) + 
+  geom_boxplot() + facet_grid(~bg_married, labeller = as_labeller(label)) + 
+  scale_y_continuous(limits = c(0, 1800))
 ```
+
+```{r}
+ggplot(data = rosca, mapping = aes(x= factor(treatment),y = fol2_amtinvest)) + 
+  geom_boxplot() + facet_grid(~bg_female, labeller = as_labeller(label)) + 
+  scale_y_continuous(limits = c(0, 1800))
+```
+
+Medians are very similar, but the range difference are vastly different.
+
 
 * The labels for facets are not clear. Find out how to change the labels in `facet_grid`
 
 ```{r}
+
+
+label <- c('1' = 'female', '0' = 'male' )
+ggplot(data = rosca, mapping = aes(x= factor(treatment),y = fol2_amtinvest)) + 
+  geom_boxplot() + facet_grid(~bg_female, labeller = as_labeller(label)) + 
+  scale_y_continuous(limits = c(0, 1800))
+
+ggplot(data = rosca, mapping = aes(x= factor(treatment),y = fol2_amtinvest)) + 
+  geom_boxplot() + facet_grid(~bg_married, labeller = as_labeller(label)) + 
+  scale_y_continuous(limits = c(0, 1800))
 ```
 
 ## Task 6
 
 * What is the relationship between age and  the amount of investment in hospital products？Use `geom_smooth` to show the relationship between `age` and `fol2_amtinvest` for each of the three treatment groups.
-```{r}
 
+Seems like the younger you are, the more amount of investment you invest.
+
+```{r}
+  ggplot (data = rosca, mapping = aes(x = bg_b1_age, y =fol2_amtinvest)) + 
+    geom_point() + 
+    scale_y_continuous(limits = c(0,1500)) + geom_smooth() + facet_grid(~treatment)
 ```
 
 
