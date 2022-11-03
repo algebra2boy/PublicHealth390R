@@ -2,7 +2,9 @@
 title: "Homework3"
 author: "Yongye Tan"
 date: "10/22/2022"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -11,11 +13,11 @@ library(nycflights13)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-``` {r}
+```{r}
 rosca <- read.csv("rosca.csv")
 ```
 
-``` {r}
+```{r}
 rosca$treatment <- NA
 rosca$treatment[rosca$encouragement == 1] <- "control"
 rosca$treatment[rosca$safe_box == 1] <- "safebox"
@@ -28,10 +30,14 @@ rosca$bg_married <-  factor(rosca$bg_married)
 
 # 1
 
-a. Use a bar chart to show the distribution of bg_married within each treatment condition. Which treatment condition has the highest proportion of married people? (Note: you need to add appropriate title, labels of axes, lengend name, and change the names of the two levels in the legend.)
+a.  Use a bar chart to show the distribution of bg_married within each treatment condition. Which treatment condition has the highest proportion of married people? (Note: you need to add appropriate title, labels of axes, lengend name, and change the names of the two levels in the legend.)
 
 The lockbox treament condition has the highest proportion of married people, as shown with the blue color.
+
 ```{r}
+
+
+
 ggplot(data = rosca) + 
   geom_bar(mapping = aes(treatment, fill = bg_female), 
            position = "dodge") + 
@@ -49,14 +55,25 @@ ggplot(data = rosca) +
 ```
 
 ### b.
-The barplots do not contain the exact numbers or proportions so we can add them to make the figure more informative. Make the following plot. Use geom_text to add the percentage for each bar (You don’t need to be perfect for the position of the annotation). The following codes calculate the counts and proportions of unmarried people under control, married people under control, unmarried people under lockbox, married people under lockbox, unmarried people under safebox, and married people under safebox. You need to change the proportions to the percentages. (You can use other methods for this. Check function percent() in scales package )
-``` {r }
+
+The barplots do not contain the exact numbers or proportions so we can add them to make the figure more informative. Make the following plot. Use geom_text to add the percentage for each bar (You don't need to be perfect for the position of the annotation). The following codes calculate the counts and proportions of unmarried people under control, married people under control, unmarried people under lockbox, married people under lockbox, unmarried people under safebox, and married people under safebox. You need to change the proportions to the percentages. (You can use other methods for this. Check function percent() in scales package )
+
+```{r }
 y <- as.numeric(t(table(rosca$treatment,rosca$bg_married)))
 prop <- table(rosca$treatment,rosca$bg_married)/length(rosca$treatment)
-prop <- as.numeric(t(prop))
+prop <- as.numeric(t(prop)) * 100
+prop <- round(prop,  digits = 2)
 ```
 
 ```{r}
+text <- data.frame(
+  # set the text location
+  x_pos = c(0.8,1.2,1.8,2.2,2.8,3.2),
+  y_pos = c(32, 78, 53, 140, 25, 88),
+  label = str_c(prop, "%")
+)
+
+
 ggplot(data = rosca) + 
   geom_bar(mapping = aes(treatment, fill = bg_female), 
            position = "dodge") + 
@@ -70,10 +87,15 @@ ggplot(data = rosca) +
   theme(plot.title = element_text(hjust = 0.5, face = "bold")) + 
   # change the legend label title and name
   scale_fill_discrete(name = "marital status",
-                      labels = c("unmarried", "married")) 
+                      labels = c("unmarried", "married")) + 
+  geom_text(data = text,
+            mapping = aes(x = x_pos,
+            y = y_pos,
+            label = label))
 ```
 
-#2 
+#2
+
 ```{r}
 # filter out the temp that is na
 weather <- weather %>% filter(!is.na(temp))
@@ -84,7 +106,7 @@ temp.facet <- ggplot(data = weather)+
 temp.facet
 ```
 
-a. Add appropriate title and labels of axes. Remove the y-axis ticks and tick labels (200,400…)
+a.  Add appropriate title and labels of axes. Remove the y-axis ticks and tick labels (200,400...)
 
 ```{r}
 temp.facet+ labs(
@@ -96,7 +118,8 @@ temp.facet+ labs(
   scale_y_continuous(labels = NULL)
 ```
 
-b. Change the facet labels from numeric month to month abbreviations, e.g., 1 to Jan.
+b.  Change the facet labels from numeric month to month abbreviations, e.g., 1 to Jan.
+
 ```{r}
 # c(1,2,3,4,5,6,7,8,9,10,11,12)
 month_label <- c (
@@ -120,7 +143,7 @@ month_label_plot <- ggplot(data = weather)+
 month_label_plot
 ```
 
-c. We can add the average termperature for each month to make the firgure more informative. Make the following plot. You can use round(tapply(weather$temp, factor(weather$month),mean)) to obtain the average temperature of each month.
+c.  We can add the average termperature for each month to make the firgure more informative. Make the following plot. You can use round(tapply(weather$temp, factor(weather$month),mean)) to obtain the average temperature of each month.
 
 ```{r}
 month_label <- c (
@@ -129,17 +152,16 @@ month_label <- c (
                 '9' = "Sep", '10' = "Oct",'11' = "Nov",'12' = "Dec")
 
 temperature_mean <- round(tapply(weather$temp, factor(weather$month),mean))
+temp_text <- data.frame(
+  # this is important (help the label to find where it belongs 1 -> mean 34, 2 -> mean 32)
+  month = c(1,2,3,4,5,6,7,8,9,10,11,12),
+  # set the text location
+  x = 90,
+  y = 700,
+  label = str_c("mean=",temperature_mean)
+)
 
-temperature_label <- tibble(
-  temp = Inf,
-  y = Inf,
-  label = str_c("mean=",temperature_mean),
-  month = month_label)
-
-verticle = "top"
-horiz = "right"
-
-ggplot(data = weather, aes(x = temp )) +
+graph <- ggplot(data = weather, aes(x = temp )) +
   geom_histogram(color= "white",binwidth = 5) +
   # total 4 rows
   facet_wrap(~month,
@@ -151,15 +173,16 @@ ggplot(data = weather, aes(x = temp )) +
       title = "Temperature in 12 months",
       x = "Temperature (in Fahrenheit)",
       y = NULL) + 
-      scale_y_continuous(labels = NULL) + 
-     # data is not the original data set
-     # has to make the y label very explictly
-     geom_label(data = temperature_label, aes(y = y, label = label), vjust = verticle, hjust = horiz)
+      scale_y_continuous(labels = NULL) 
+
+graph +
+     geom_text(
+       data = temp_text,
+       mapping = aes(x = x, y = y,
+                     label = label)
+     )
 
 ```
-
-
-
 
 # 3
 
@@ -168,7 +191,7 @@ ggplot(data = weather, mapping = aes(x= factor(month),y = temp)) +
   geom_boxplot()
 ```
 
-a. Remove the x-axis label, and change the tick labels from numeric month to month abbreviation as in the following plot.
+a.  Remove the x-axis label, and change the tick labels from numeric month to month abbreviation as in the following plot.
 
 ```{r}
 
@@ -183,7 +206,7 @@ ggplot(data = weather, mapping = aes(x= factor(month),y = temp)) +
   scale_x_discrete(label = month_label) 
 ```
 
-b. Remove the y-axis label, and change the tick labels on the y-axis as in the following plot.
+b.  Remove the y-axis label, and change the tick labels on the y-axis as in the following plot.
 
 ```{r}
 month_label <- c (
@@ -206,7 +229,8 @@ ggplot(data = weather, mapping = aes(x= factor(month),y = temp)) +
                                "100" = "100F"))
 ```
 
-c. (optional) We can make it better by adding the degree symbol. Make the following plot.
+c.  (optional) We can make it better by adding the degree symbol. Make the following plot.
+
 ```{r}
 month_label <- c (
                 '1' = "Jan", '2' = "Feb",'3' = "Mar",'4' = "Apr",
