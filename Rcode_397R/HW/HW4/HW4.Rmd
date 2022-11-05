@@ -1,0 +1,176 @@
+---
+title: "HW4"
+output: html_document
+date: "2022-11-04"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(palmerpenguins)
+library(babynames)
+library(nycflights13)
+```
+
+
+#1
+
+## a
+```{r}
+missing_value_in_bill_length =  sum(is.na(penguins$bill_length_mm)) / nrow(penguins) * 100 
+missing_value_in_bill_depth =  sum(is.na(penguins$bill_depth_mm)) / nrow(penguins) * 100
+missing_value_in_sex = sum (is.na(penguins$sex)) / nrow(penguins)  * 100
+```
+
+
+## b
+```{r}
+remove_na_penguin <- na.omit(penguins)
+male <- remove_na_penguin[remove_na_penguin$sex == 'male', ]
+female <- remove_na_penguin[remove_na_penguin$sex == 'female', ]
+
+mean_male_body_mass <- mean(male$body_mass_g)
+mean_female_body_mass <- mean(female$body_mass_g)
+
+median_male_body_mass <- median(male$body_mass_g)
+median_female_body_mass <- median(female$body_mass_g)
+
+```
+
+## c
+```{r}
+remove_na_penguin$body_mass_g = remove_na_penguin$body_mass_g /1000
+  ggplot(data = remove_na_penguin, mapping = aes(x = factor(sex), y = body_mass_g)) + 
+  geom_boxplot() +
+  facet_grid(~species) + 
+  labs ( x = NULL,
+         y = "body mass (in kg)",
+         title = "Average body mass")  
+    
+```
+
+I found that male penguin is heavier than femal penguin and Gentoo species overall is much heavier than those of 
+Adelie and Chinstrap.
+
+
+
+
+## d
+``` {r}
+
+ggplot(data = remove_na_penguin, mapping = aes (x = year, y =, group = sex)
+         ) +
+  geom_line(aes(linetype = sex, color = sex)) + 
+  facet_grid(~species) + 
+  labs ( x = "year",
+         y = "body mass (in kg)",
+         title = "Average body mass over time ")
+  # increment by 0.5
+                                  
+```
+
+#2 
+
+##a
+```{r}
+flights %>% 
+  group_by(dest) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(count))
+```
+
+
+
+#3
+
+
+## a
+```{r}
+filter(babynames, year == 2010 & n < 10000) %>% 
+  select(name)
+```
+```{r }
+filter(babynames, n < 10000 )
+```
+
+## b
+```{r}
+babynames %>% 
+  filter(year == 2010) %>% 
+  # in case there is duplicate
+  group_by(name) %>% 
+  mutate(name_length = str_length(name)) %>% 
+  # sort from longest to shorest
+  arrange(desc(name_length))
+```
+
+```{r}
+baby_with_long_name <- 
+  babynames %>% 
+  # group by name first 
+  group_by(name) %>% 
+  # store the length of the name
+  mutate(name_length = str_length(name)) %>% 
+  # only get the length of name that is greater than 10
+  filter(name_length >= 10) %>% 
+  # group by year later
+  group_by(year) %>% 
+  # sum up all the babynames 
+  summarize(count = sum(n, na.rm = TRUE))
+  
+ggplot(data = baby_with_long_name, mapping = 
+         aes (x = year, y = count)) + 
+  geom_line()
+  
+```
+```{r}
+# number of long name babies / total number of babies 
+
+baby_with_long_name_prop <- 
+  baby_with_long_name %>% 
+  mutate(proportions = count / sum (count, na.rm = TRUE))
+
+ggplot(data = baby_with_long_name_prop, mapping = 
+         aes (x = year, y = proportions)) + 
+  geom_line()
+```
+
+
+
+
+#4 
+
+## a
+```{r}
+toy <- tibble(
+  x = c(4, 2, 2, 3, 3, 1, 3, 4, 5),
+  group = c("c", "b", "a", "c", "b", "a", "a", "b", "c")
+)
+```
+
+```{r}
+toy %>%
+  group_by(group) %>%
+  arrange(x)
+```
+
+No, the code does not work. But the follwing code works. 
+
+
+```{r}
+toy %>% 
+  group_by(x, group) %>% 
+  arrange(group,x)
+```
+
+## b
+```{r}
+babynames %>% 
+  filter (year >= 2010 & year <= 2017 ) %>% 
+  group_by(year) %>% 
+  summarise(total_sum = sum(n, na.rm = TRUE))
+```
+
+
+
+
