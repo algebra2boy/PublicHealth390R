@@ -1,0 +1,444 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Homework3},
+  pdfauthor={Yongye Tan},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Homework3}
+\author{Yongye Tan}
+\date{10/22/2022}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rosca }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"rosca.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rosca}\SpecialCharTok{$}\NormalTok{treatment }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+\NormalTok{rosca}\SpecialCharTok{$}\NormalTok{treatment[rosca}\SpecialCharTok{$}\NormalTok{encouragement }\SpecialCharTok{==} \DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"control"}
+\NormalTok{rosca}\SpecialCharTok{$}\NormalTok{treatment[rosca}\SpecialCharTok{$}\NormalTok{safe\_box }\SpecialCharTok{==} \DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"safebox"}
+\NormalTok{rosca}\SpecialCharTok{$}\NormalTok{treatment[rosca}\SpecialCharTok{$}\NormalTok{locked\_box }\SpecialCharTok{==} \DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"lockbox"}
+\NormalTok{rosca}\SpecialCharTok{$}\NormalTok{treatment }\OtherTok{\textless{}{-}} \FunctionTok{as.factor}\NormalTok{(rosca}\SpecialCharTok{$}\NormalTok{treatment)}
+\NormalTok{rosca }\OtherTok{\textless{}{-}}\NormalTok{  rosca[rosca}\SpecialCharTok{$}\NormalTok{has\_followup2 }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, ]}
+\NormalTok{rosca}\SpecialCharTok{$}\NormalTok{bg\_female }\OtherTok{\textless{}{-}}  \FunctionTok{factor}\NormalTok{(rosca}\SpecialCharTok{$}\NormalTok{bg\_female )}
+\NormalTok{rosca}\SpecialCharTok{$}\NormalTok{bg\_married }\OtherTok{\textless{}{-}}  \FunctionTok{factor}\NormalTok{(rosca}\SpecialCharTok{$}\NormalTok{bg\_married)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{section}{%
+\section{1}\label{section}}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Use a bar chart to show the distribution of bg\_married within each
+  treatment condition. Which treatment condition has the highest
+  proportion of married people? (Note: you need to add appropriate
+  title, labels of axes, lengend name, and change the names of the two
+  levels in the legend.)
+\end{enumerate}
+
+The lockbox treament condition has the highest proportion of married
+people, as shown with the blue color.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ rosca) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(treatment, }\AttributeTok{fill =}\NormalTok{ bg\_female), }
+           \AttributeTok{position =} \StringTok{"dodge"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.title.x =} \FunctionTok{element\_blank}\NormalTok{()) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.title.y =} \FunctionTok{element\_blank}\NormalTok{()) }\SpecialCharTok{+} 
+  \CommentTok{\# add a title }
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Distribution of marital status"}
+\NormalTok{  ) }\SpecialCharTok{+} 
+  \CommentTok{\# center the title and bold it}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{)) }\SpecialCharTok{+} 
+  \CommentTok{\# change the legend label title and name}
+  \FunctionTok{scale\_fill\_discrete}\NormalTok{(}\AttributeTok{name =} \StringTok{"marital status"}\NormalTok{,}
+                      \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"unmarried"}\NormalTok{, }\StringTok{"married"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework3_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\hypertarget{b.}{%
+\subsubsection{b.}\label{b.}}
+
+The barplots do not contain the exact numbers or proportions so we can
+add them to make the figure more informative. Make the following plot.
+Use geom\_text to add the percentage for each bar (You don't need to be
+perfect for the position of the annotation). The following codes
+calculate the counts and proportions of unmarried people under control,
+married people under control, unmarried people under lockbox, married
+people under lockbox, unmarried people under safebox, and married people
+under safebox. You need to change the proportions to the percentages.
+(You can use other methods for this. Check function percent() in scales
+package )
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{t}\NormalTok{(}\FunctionTok{table}\NormalTok{(rosca}\SpecialCharTok{$}\NormalTok{treatment,rosca}\SpecialCharTok{$}\NormalTok{bg\_married)))}
+\NormalTok{prop }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(rosca}\SpecialCharTok{$}\NormalTok{treatment,rosca}\SpecialCharTok{$}\NormalTok{bg\_married)}\SpecialCharTok{/}\FunctionTok{length}\NormalTok{(rosca}\SpecialCharTok{$}\NormalTok{treatment)}
+\NormalTok{prop }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{t}\NormalTok{(prop))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ rosca) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(treatment, }\AttributeTok{fill =}\NormalTok{ bg\_female), }
+           \AttributeTok{position =} \StringTok{"dodge"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.title.x =} \FunctionTok{element\_blank}\NormalTok{()) }\SpecialCharTok{+} 
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.title.y =} \FunctionTok{element\_blank}\NormalTok{()) }\SpecialCharTok{+} 
+  \CommentTok{\# add a title }
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Distribution of marital status"}
+\NormalTok{  ) }\SpecialCharTok{+} 
+  \CommentTok{\# center the title and bold it}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{)) }\SpecialCharTok{+} 
+  \CommentTok{\# change the legend label title and name}
+  \FunctionTok{scale\_fill\_discrete}\NormalTok{(}\AttributeTok{name =} \StringTok{"marital status"}\NormalTok{,}
+                      \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"unmarried"}\NormalTok{, }\StringTok{"married"}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework3_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\#2
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# filter out the temp that is na}
+\NormalTok{weather }\OtherTok{\textless{}{-}}\NormalTok{ weather }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(temp))}
+\NormalTok{temp.facet }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ weather)}\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ temp),}\AttributeTok{color=} \StringTok{"white"}\NormalTok{,}\AttributeTok{binwidth =} \DecValTok{5}\NormalTok{)}\SpecialCharTok{+}
+  \CommentTok{\# total 4 rows}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{month,}\AttributeTok{nrow=}\DecValTok{4}\NormalTok{)}
+\NormalTok{temp.facet}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework3_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Add appropriate title and labels of axes. Remove the y-axis ticks and
+  tick labels (200,400\ldots)
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{temp.facet}\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}
+  \AttributeTok{title =} \StringTok{"Temperature in 12 months"}\NormalTok{,}
+  \AttributeTok{x =} \StringTok{"Temperature (in Fahrenheit)"}\NormalTok{,}
+  \CommentTok{\# remove the y{-}axis ticks}
+  \AttributeTok{y =} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+} 
+  \CommentTok{\# remove the y tick labels}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{labels =} \ConstantTok{NULL}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework3_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Change the facet labels from numeric month to month abbreviations,
+  e.g., 1 to Jan.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# c(1,2,3,4,5,6,7,8,9,10,11,12)}
+\NormalTok{month\_label }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{ (}
+                \StringTok{\textquotesingle{}1\textquotesingle{}} \OtherTok{=} \StringTok{"Jan"}\NormalTok{, }\StringTok{\textquotesingle{}2\textquotesingle{}} \OtherTok{=} \StringTok{"Feb"}\NormalTok{,}\StringTok{\textquotesingle{}3\textquotesingle{}} \OtherTok{=} \StringTok{"Mar"}\NormalTok{,}\StringTok{\textquotesingle{}4\textquotesingle{}} \OtherTok{=} \StringTok{"Apr"}\NormalTok{,}
+                \StringTok{\textquotesingle{}5\textquotesingle{}} \OtherTok{=} \StringTok{"May"}\NormalTok{, }\StringTok{\textquotesingle{}6\textquotesingle{}} \OtherTok{=} \StringTok{"Jun"}\NormalTok{,}\StringTok{\textquotesingle{}7\textquotesingle{}} \OtherTok{=} \StringTok{"Jul"}\NormalTok{,}\StringTok{\textquotesingle{}8\textquotesingle{}} \OtherTok{=} \StringTok{"Aug"}\NormalTok{,}
+                \StringTok{\textquotesingle{}9\textquotesingle{}} \OtherTok{=} \StringTok{"Sep"}\NormalTok{, }\StringTok{\textquotesingle{}10\textquotesingle{}} \OtherTok{=} \StringTok{"Oct"}\NormalTok{,}\StringTok{\textquotesingle{}11\textquotesingle{}} \OtherTok{=} \StringTok{"Nov"}\NormalTok{,}\StringTok{\textquotesingle{}12\textquotesingle{}} \OtherTok{=} \StringTok{"Dec"}\NormalTok{)}
+
+
+\NormalTok{month\_label\_plot }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ weather)}\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ temp),}\AttributeTok{color=} \StringTok{"white"}\NormalTok{,}\AttributeTok{binwidth =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{+}
+  \CommentTok{\# total 4 rows}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{month,}
+             \AttributeTok{nrow=}\DecValTok{4}\NormalTok{,}
+             \CommentTok{\# match the label to the new label}
+             \AttributeTok{labeller =} \FunctionTok{as\_labeller}\NormalTok{(month\_label))}\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}
+      \AttributeTok{title =} \StringTok{"Temperature in 12 months"}\NormalTok{,}
+      \AttributeTok{x =} \StringTok{"Temperature (in Fahrenheit)"}\NormalTok{,}
+      \AttributeTok{y =} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+} 
+      \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{labels =} \ConstantTok{NULL}\NormalTok{) }
+\NormalTok{month\_label\_plot}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework3_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  We can add the average termperature for each month to make the firgure
+  more informative. Make the following plot. You can use
+  round(tapply(weather\(temp, factor(weather\)month),mean)) to obtain
+  the average temperature of each month.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{month\_label }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{ (}
+                \StringTok{\textquotesingle{}1\textquotesingle{}} \OtherTok{=} \StringTok{"Jan"}\NormalTok{, }\StringTok{\textquotesingle{}2\textquotesingle{}} \OtherTok{=} \StringTok{"Feb"}\NormalTok{,}\StringTok{\textquotesingle{}3\textquotesingle{}} \OtherTok{=} \StringTok{"Mar"}\NormalTok{,}\StringTok{\textquotesingle{}4\textquotesingle{}} \OtherTok{=} \StringTok{"Apr"}\NormalTok{,}
+                \StringTok{\textquotesingle{}5\textquotesingle{}} \OtherTok{=} \StringTok{"May"}\NormalTok{, }\StringTok{\textquotesingle{}6\textquotesingle{}} \OtherTok{=} \StringTok{"Jun"}\NormalTok{,}\StringTok{\textquotesingle{}7\textquotesingle{}} \OtherTok{=} \StringTok{"Jul"}\NormalTok{,}\StringTok{\textquotesingle{}8\textquotesingle{}} \OtherTok{=} \StringTok{"Aug"}\NormalTok{,}
+                \StringTok{\textquotesingle{}9\textquotesingle{}} \OtherTok{=} \StringTok{"Sep"}\NormalTok{, }\StringTok{\textquotesingle{}10\textquotesingle{}} \OtherTok{=} \StringTok{"Oct"}\NormalTok{,}\StringTok{\textquotesingle{}11\textquotesingle{}} \OtherTok{=} \StringTok{"Nov"}\NormalTok{,}\StringTok{\textquotesingle{}12\textquotesingle{}} \OtherTok{=} \StringTok{"Dec"}\NormalTok{)}
+
+\NormalTok{temperature\_mean }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(}\FunctionTok{tapply}\NormalTok{(weather}\SpecialCharTok{$}\NormalTok{temp, }\FunctionTok{factor}\NormalTok{(weather}\SpecialCharTok{$}\NormalTok{month),mean))}
+\NormalTok{temp\_text }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \CommentTok{\# this is important (help the label to find where it belongs 1 {-}\textgreater{} mean 34, 2 {-}\textgreater{} mean 32)}
+  \AttributeTok{month =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{8}\NormalTok{,}\DecValTok{9}\NormalTok{,}\DecValTok{10}\NormalTok{,}\DecValTok{11}\NormalTok{,}\DecValTok{12}\NormalTok{),}
+  \CommentTok{\# set the text location}
+  \AttributeTok{x =} \DecValTok{90}\NormalTok{,}
+  \AttributeTok{y =} \DecValTok{200}\NormalTok{,}
+  \AttributeTok{label =} \FunctionTok{str\_c}\NormalTok{(}\StringTok{"mean="}\NormalTok{,temperature\_mean)}
+\NormalTok{)}
+
+\NormalTok{graph }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ weather, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ temp )) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{color=} \StringTok{"white"}\NormalTok{,}\AttributeTok{binwidth =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{+}
+  \CommentTok{\# total 4 rows}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{month,}
+             \AttributeTok{nrow=}\DecValTok{4}\NormalTok{,}
+             \CommentTok{\# match the label to the new label}
+             \AttributeTok{labeller =} \FunctionTok{as\_labeller}\NormalTok{(month\_label)}
+\NormalTok{             ) }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}
+      \AttributeTok{title =} \StringTok{"Temperature in 12 months"}\NormalTok{,}
+      \AttributeTok{x =} \StringTok{"Temperature (in Fahrenheit)"}\NormalTok{,}
+      \AttributeTok{y =} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+} 
+      \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{labels =} \ConstantTok{NULL}\NormalTok{) }
+
+\NormalTok{graph }\SpecialCharTok{+}
+     \FunctionTok{geom\_text}\NormalTok{(}
+       \AttributeTok{data =}\NormalTok{ temp\_text,}
+       \AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y,}
+                     \AttributeTok{label =}\NormalTok{ label)}
+\NormalTok{     )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework3_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\hypertarget{section-1}{%
+\section{3}\label{section-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ weather, }\AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{x=} \FunctionTok{factor}\NormalTok{(month),}\AttributeTok{y =}\NormalTok{ temp)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework3_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Remove the x-axis label, and change the tick labels from numeric month
+  to month abbreviation as in the following plot.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{month\_label }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{ (}
+                \StringTok{\textquotesingle{}1\textquotesingle{}} \OtherTok{=} \StringTok{"Jan"}\NormalTok{, }\StringTok{\textquotesingle{}2\textquotesingle{}} \OtherTok{=} \StringTok{"Feb"}\NormalTok{,}\StringTok{\textquotesingle{}3\textquotesingle{}} \OtherTok{=} \StringTok{"Mar"}\NormalTok{,}\StringTok{\textquotesingle{}4\textquotesingle{}} \OtherTok{=} \StringTok{"Apr"}\NormalTok{,}
+                \StringTok{\textquotesingle{}5\textquotesingle{}} \OtherTok{=} \StringTok{"May"}\NormalTok{, }\StringTok{\textquotesingle{}6\textquotesingle{}} \OtherTok{=} \StringTok{"Jun"}\NormalTok{,}\StringTok{\textquotesingle{}7\textquotesingle{}} \OtherTok{=} \StringTok{"Jul"}\NormalTok{,}\StringTok{\textquotesingle{}8\textquotesingle{}} \OtherTok{=} \StringTok{"Aug"}\NormalTok{,}
+                \StringTok{\textquotesingle{}9\textquotesingle{}} \OtherTok{=} \StringTok{"Sep"}\NormalTok{, }\StringTok{\textquotesingle{}10\textquotesingle{}} \OtherTok{=} \StringTok{"Oct"}\NormalTok{,}\StringTok{\textquotesingle{}11\textquotesingle{}} \OtherTok{=} \StringTok{"Nov"}\NormalTok{,}\StringTok{\textquotesingle{}12\textquotesingle{}} \OtherTok{=} \StringTok{"Dec"}\NormalTok{)}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ weather, }\AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{x=} \FunctionTok{factor}\NormalTok{(month),}\AttributeTok{y =}\NormalTok{ temp)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+} 
+  \CommentTok{\# since these month are discrete}
+  \FunctionTok{scale\_x\_discrete}\NormalTok{(}\AttributeTok{label =}\NormalTok{ month\_label) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework3_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Remove the y-axis label, and change the tick labels on the y-axis as
+  in the following plot.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{month\_label }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{ (}
+                \StringTok{\textquotesingle{}1\textquotesingle{}} \OtherTok{=} \StringTok{"Jan"}\NormalTok{, }\StringTok{\textquotesingle{}2\textquotesingle{}} \OtherTok{=} \StringTok{"Feb"}\NormalTok{,}\StringTok{\textquotesingle{}3\textquotesingle{}} \OtherTok{=} \StringTok{"Mar"}\NormalTok{,}\StringTok{\textquotesingle{}4\textquotesingle{}} \OtherTok{=} \StringTok{"Apr"}\NormalTok{,}
+                \StringTok{\textquotesingle{}5\textquotesingle{}} \OtherTok{=} \StringTok{"May"}\NormalTok{, }\StringTok{\textquotesingle{}6\textquotesingle{}} \OtherTok{=} \StringTok{"Jun"}\NormalTok{,}\StringTok{\textquotesingle{}7\textquotesingle{}} \OtherTok{=} \StringTok{"Jul"}\NormalTok{,}\StringTok{\textquotesingle{}8\textquotesingle{}} \OtherTok{=} \StringTok{"Aug"}\NormalTok{,}
+                \StringTok{\textquotesingle{}9\textquotesingle{}} \OtherTok{=} \StringTok{"Sep"}\NormalTok{, }\StringTok{\textquotesingle{}10\textquotesingle{}} \OtherTok{=} \StringTok{"Oct"}\NormalTok{,}\StringTok{\textquotesingle{}11\textquotesingle{}} \OtherTok{=} \StringTok{"Nov"}\NormalTok{,}\StringTok{\textquotesingle{}12\textquotesingle{}} \OtherTok{=} \StringTok{"Dec"}\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ weather, }\AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{x=} \FunctionTok{factor}\NormalTok{(month),}\AttributeTok{y =}\NormalTok{ temp)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=} \ConstantTok{NULL}\NormalTok{,}
+       \AttributeTok{y =} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+} 
+  \CommentTok{\# since these months are discrete}
+  \FunctionTok{scale\_x\_discrete}\NormalTok{(}\AttributeTok{label =}\NormalTok{ month\_label) }\SpecialCharTok{+}
+  \CommentTok{\# have to set the y axis mannually and and change the label mannually}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{breaks =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FunctionTok{max}\NormalTok{(weather}\SpecialCharTok{$}\NormalTok{temp, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{), }\AttributeTok{by =} \DecValTok{25}\NormalTok{),}
+                     \AttributeTok{label =} \FunctionTok{c}\NormalTok{(}\StringTok{"0"} \OtherTok{=} \StringTok{"0F"}\NormalTok{,}
+                               \StringTok{"25"} \OtherTok{=} \StringTok{"25F"}\NormalTok{,}
+                               \StringTok{"50"} \OtherTok{=} \StringTok{"50F"}\NormalTok{,}
+                               \StringTok{"75"} \OtherTok{=} \StringTok{"75F"}\NormalTok{,}
+                               \StringTok{"100"} \OtherTok{=} \StringTok{"100F"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework3_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  (optional) We can make it better by adding the degree symbol. Make the
+  following plot.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{month\_label }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{ (}
+                \StringTok{\textquotesingle{}1\textquotesingle{}} \OtherTok{=} \StringTok{"Jan"}\NormalTok{, }\StringTok{\textquotesingle{}2\textquotesingle{}} \OtherTok{=} \StringTok{"Feb"}\NormalTok{,}\StringTok{\textquotesingle{}3\textquotesingle{}} \OtherTok{=} \StringTok{"Mar"}\NormalTok{,}\StringTok{\textquotesingle{}4\textquotesingle{}} \OtherTok{=} \StringTok{"Apr"}\NormalTok{,}
+                \StringTok{\textquotesingle{}5\textquotesingle{}} \OtherTok{=} \StringTok{"May"}\NormalTok{, }\StringTok{\textquotesingle{}6\textquotesingle{}} \OtherTok{=} \StringTok{"Jun"}\NormalTok{,}\StringTok{\textquotesingle{}7\textquotesingle{}} \OtherTok{=} \StringTok{"Jul"}\NormalTok{,}\StringTok{\textquotesingle{}8\textquotesingle{}} \OtherTok{=} \StringTok{"Aug"}\NormalTok{,}
+                \StringTok{\textquotesingle{}9\textquotesingle{}} \OtherTok{=} \StringTok{"Sep"}\NormalTok{, }\StringTok{\textquotesingle{}10\textquotesingle{}} \OtherTok{=} \StringTok{"Oct"}\NormalTok{,}\StringTok{\textquotesingle{}11\textquotesingle{}} \OtherTok{=} \StringTok{"Nov"}\NormalTok{,}\StringTok{\textquotesingle{}12\textquotesingle{}} \OtherTok{=} \StringTok{"Dec"}\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ weather, }\AttributeTok{mapping =} \FunctionTok{aes}\NormalTok{(}\AttributeTok{x=} \FunctionTok{factor}\NormalTok{(month),}\AttributeTok{y =}\NormalTok{ temp)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=} \ConstantTok{NULL}\NormalTok{,}
+       \AttributeTok{y =} \ConstantTok{NULL}\NormalTok{) }\SpecialCharTok{+} 
+  \CommentTok{\# since these months are discrete}
+  \FunctionTok{scale\_x\_discrete}\NormalTok{(}\AttributeTok{label =}\NormalTok{ month\_label) }\SpecialCharTok{+}
+  \CommentTok{\# have to set the y axis mannually and and change the label mannually}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{breaks =} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FunctionTok{max}\NormalTok{(weather}\SpecialCharTok{$}\NormalTok{temp, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{), }\AttributeTok{by =} \DecValTok{25}\NormalTok{),}
+                     \AttributeTok{label =} \FunctionTok{c}\NormalTok{(}\StringTok{"0"} \OtherTok{=} \StringTok{"0°F"}\NormalTok{,}
+                               \StringTok{"25"} \OtherTok{=} \StringTok{"25°F"}\NormalTok{,}
+                               \StringTok{"50"} \OtherTok{=} \StringTok{"50°F"}\NormalTok{,}
+                               \StringTok{"75"} \OtherTok{=} \StringTok{"75°F"}\NormalTok{,}
+                               \StringTok{"100"} \OtherTok{=} \StringTok{"100°F"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework3_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\end{document}

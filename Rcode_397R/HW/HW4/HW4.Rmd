@@ -10,6 +10,8 @@ library(tidyverse)
 library(palmerpenguins)
 library(babynames)
 library(nycflights13)
+library(ggplot2)
+
 ```
 
 
@@ -17,9 +19,15 @@ library(nycflights13)
 
 ## a
 ```{r}
-missing_value_in_bill_length =  sum(is.na(penguins$bill_length_mm)) / nrow(penguins) * 100 
-missing_value_in_bill_depth =  sum(is.na(penguins$bill_depth_mm)) / nrow(penguins) * 100
-missing_value_in_sex = sum (is.na(penguins$sex)) / nrow(penguins)  * 100
+missing_value_in_bill_length =  sum(is.na(penguins$bill_length_mm)) / length(penguins$bill_length_mm) * 100 
+missing_value_in_bill_depth =  sum(is.na(penguins$bill_depth_mm)) / length(penguins$bill_depth_mm) * 100
+missing_value_in_sex = sum (is.na(penguins$sex)) / length(penguins$sex)  * 100
+
+cat("percentage of missing bill length mm is",missing_value_in_bill_length, "\n")
+cat("percentage of missing bill depth in mm is",missing_value_in_bill_depth, "\n")
+cat("percentage of missing sex is", missing_value_in_sex, "\n")
+
+
 ```
 
 
@@ -35,6 +43,12 @@ mean_female_body_mass <- mean(female$body_mass_g)
 median_male_body_mass <- median(male$body_mass_g)
 median_female_body_mass <- median(female$body_mass_g)
 
+cat("mean of the body mass for male penguins is",mean_male_body_mass, "\n")
+cat("mean of the body mass for female penguins is",mean_female_body_mass, "\n")
+
+cat("median of the body mass for male penguins is", median_male_body_mass, "\n")
+cat("median of the body mass for female penuins is", median_female_body_mass, "\n")
+
 ```
 
 ## c
@@ -49,8 +63,9 @@ remove_na_penguin$body_mass_g = remove_na_penguin$body_mass_g /1000
     
 ```
 
-I found that male penguin is heavier than femal penguin and Gentoo species overall is much heavier than those of 
-Adelie and Chinstrap.
+
+
+I found that male penguin is heavier than female penguin. I also noticed Gentoo species overall is much heavier than those of Adelie and Chinstrap.
 
 
 
@@ -58,16 +73,64 @@ Adelie and Chinstrap.
 ## d
 ``` {r}
 
-ggplot(data = remove_na_penguin, mapping = aes (x = year, y =, group = sex)
-         ) +
-  geom_line(aes(linetype = sex, color = sex)) + 
+G = remove_na_penguin %>% group_by(year, species, sex) %>%  
+  summarise(average = mean(body_mass_g))
+
+ggplot(data = G, mapping = aes(x = year, y = average)) + 
+  # make the point 
+  geom_point() + 
+  # make line for each sex
+  geom_line(aes(linetype = sex)) + 
+  # separate each spcices
   facet_grid(~species) + 
-  labs ( x = "year",
-         y = "body mass (in kg)",
-         title = "Average body mass over time ")
-  # increment by 0.5
+  labs (x = "year", 
+        y = "body mass (in kg)",
+        title = "Average body mass") + 
+  scale_x_continuous(breaks = seq(2007, 2009 , by = 1),
+                     label = c("2007" = "07",
+                               "2008" = "08",
+                               "2009" = "09"))
+ 
                                   
 ```
+
+
+I found that male overall has heavier body mass than female, and gentoo is heavier than other two species.
+
+
+## e
+
+```{r}
+
+G1 = remove_na_penguin %>% group_by(year, species, sex, flipper_length_mm) %>%  
+  summarise(average = mean(body_mass_g))
+
+ggplot(data = G1, mapping = aes(x = flipper_length_mm /10, y = average)) + 
+  # make line for each sex
+  geom_line(aes(linetype = sex)) + 
+  # separate each spcices
+  facet_grid(~species) + 
+  labs (x = "flipper length in (cm)", 
+        y = "body mass (in kg)") + 
+  geom_smooth()
+
+```
+
+I found that as flipper length in cm increases, teh body mass in kg increases as well. Male has a bigger trend of gaining body mass 
+than female does. 
+
+```{r}
+ggplot(data = remove_na_penguin, mapping = aes(x = flipper_length_mm/10, y = bill_length_mm/ 10)) + 
+  geom_line(aes(linetype=sex)) + 
+  geom_smooth() + 
+  facet_grid(~species) + 
+  labs (x = "flipper length in (cm)", 
+        y = "bill length (in cm)")
+```
+
+I found that Gentoo overall has a very high potential of having more bill length as fliper length length 
+as I observe from the graph.
+
 
 #2 
 
@@ -78,19 +141,99 @@ flights %>%
   summarise(count = n()) %>% 
   arrange(desc(count))
 ```
+The most frequent destination airports for all flights departing from New York City is "ORD" 
+
+##b
+
+```{r}
+
+
+# calculated the "gained time in the air"
+f <- flights %>% 
+  mutate("gained_time_in_th_air" = (arr_delay-dep_delay))
+
+f <- na.omit(f)
+
+ggplot (f, aes(x =dep_delay, y =gained_time_in_th_air  )) + geom_point() + 
+  labs(x = "dep_delay",
+       y = "gained time in the air") +
+  geom_smooth() 
+
+```
+
+
+1. First analysis
+If the gained time starts off high or low, and if dep_delay increases, the line has an asymptotic convergence, which means the value is slowly approaching to the 0 gained time in the air. In other words, regardless of what gained time in the air is, the dep_delay goes to 0. Another thing I found is most data points are clustered between 0 and 250 for dep_delay, maening it plays a big factor for the gained time. The less dep_delay, the more gained time. 
+
+2. Second analysis
+```{r}
+# calculated the "gained time in the air per hour"
+
+ggplot (f, aes(x =dep_delay, y=gained_time_in_th_air/hour)) + geom_point() + 
+  labs(x = "dep_delay",
+       y = "gained time in the air per hour") +
+  geom_smooth() 
+```
+
+
+The graph is very similar to the one with the previous section, both graph converge to 0 gained time as dep_delay increases. Most cluster located between
+0 and 400 dep_delay and -10 and 10 gained time in the air per hour. 
+
+##c
+```{r}
+# 1. removed cancelled flights
+# meaning the flights do not have arrival time or departure time 
+f <- na.omit(flights)
+
+# 2. create a variable which equals 0 if the flight took off between 0 and 3 am, equals 1 if took off between 3 and 6 am…
+
+f <- f %>% mutate(took_off = (dep_time %/% 100) )
+
+
+variable <- case_when(f$took_off >=0 & f$took_off < 3 ~ 0,
+                      f$took_off >=3 & f$took_off < 6 ~ 1,
+                      f$took_off >=6 & f$took_off < 9 ~ 2,
+                      f$took_off >=9 & f$took_off < 12 ~ 3,
+                      f$took_off >=12 & f$took_off < 15 ~ 4,
+                      f$took_off >=15 & f$took_off < 18 ~ 5,
+                      f$took_off >=18 & f$took_off < 21 ~ 6,
+                      f$took_off >=21 & f$took_off < 24 ~ 7)
+
+df <- unlist(variable, use.names = FALSE)
+
+
+
+ggplot() + geom_histogram(aes(df), bins = 30, binwidth = 0.5) +
+  labs(x = "Hour",
+      y = "count") + 
+  scale_x_continuous(breaks = seq(0, 7 , by = 1),
+                     label = c (
+                '0' = "0-3", '1' = "3-6",'2' = "6-9",'3' = "9-12",
+                '4' = "12-15", '5' = "15-18",'6' = "18-21",'7' = "21-24"))
+
+  
+```
 
 
 
 #3
 
 
-## a
+## a 
 ```{r}
 filter(babynames, year == 2010 & n < 10000) %>% 
   select(name)
 ```
+
+
+This is the optional
+
 ```{r }
-filter(babynames, n < 10000 )
+babynames %>% 
+  group_by(year, sex,n) %>%
+  select (year, sex, name, n) %>%  
+  filter(n < 10000)
+# 1918 820
 ```
 
 ## b
@@ -104,6 +247,8 @@ babynames %>%
   arrange(desc(name_length))
 ```
 
+
+## c 
 ```{r}
 baby_with_long_name <- 
   babynames %>% 
@@ -123,6 +268,17 @@ ggplot(data = baby_with_long_name, mapping =
   geom_line()
   
 ```
+
+
+
+I found that the the length of the babynames started increasing since 1880, then it hit its peak at around 1980's. But after that, the length of the babynames started decreasing. One of my thoughts is it might be modern people
+perfer having shorter babynames, so they could save the time of memorizing 
+the name of their kids. Simplistics is the key.
+
+
+
+## d (optional) 
+
 ```{r}
 # number of long name babies / total number of babies 
 
@@ -165,12 +321,24 @@ toy %>%
 
 ## b
 ```{r}
+
 babynames %>% 
-  filter (year >= 2010 & year <= 2017 ) %>% 
+  filter (year >= 2010 & year <=2017 ) %>% 
   group_by(year) %>% 
-  summarise(total_sum = sum(n, na.rm = TRUE))
+  mutate(rank = rank(-n)) %>% 
+  arrange(rank)
+  
 ```
 
 
+The top two most popular names: 
+2010: Isabella, Jacob
+2011: Sophia, Jacob
+2012: Sophia, Emma
+2013: Sophia, Emma
+2014: Emma, Olivia
+2015: Emma, Olivia
+2016: Emma, Olivia
+2017: Emma, Liam
 
 
