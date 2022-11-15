@@ -105,14 +105,13 @@ I found that male overall has heavier body mass than female, and gentoo is heavi
 G1 = remove_na_penguin %>% group_by(year, species, sex, flipper_length_mm) %>%  
   summarise(average = mean(body_mass_g))
 
-ggplot(data = G1, mapping = aes(x = flipper_length_mm /10, y = average)) + 
+ggplot(data = G1, mapping = aes(x = flipper_length_mm /10, y = average, group = sex)) +
   # make line for each sex
-  geom_line(aes(linetype = sex)) + 
   # separate each spcices
-  facet_grid(~species) + 
+  facet_grid(~species, scales = "free_x") + 
   labs (x = "flipper length in (cm)", 
         y = "body mass (in kg)") + 
-  geom_smooth()
+  geom_smooth(aes(linetype = sex))
 
 ```
 
@@ -121,15 +120,13 @@ than female does.
 
 ```{r}
 ggplot(data = remove_na_penguin, mapping = aes(x = flipper_length_mm/10, y = bill_length_mm/ 10)) + 
-  geom_line(aes(linetype=sex)) + 
-  geom_smooth() + 
-  facet_grid(~species) + 
+  geom_smooth(aes(linetype=sex)) + 
+  facet_grid(~species, scales = "free_x") + 
   labs (x = "flipper length in (cm)", 
         y = "bill length (in cm)")
 ```
 
-I found that Gentoo overall has a very high potential of having more bill length as fliper length length 
-as I observe from the graph.
+I found that Gentoo overall has a very high potential of having more bill length as fliper length length as I observe from the graph.
 
 
 #2 
