@@ -126,7 +126,7 @@ ggplot(data = remove_na_penguin, mapping = aes(x = flipper_length_mm/10, y = bil
         y = "bill length (in cm)")
 ```
 
-I found that Gentoo overall has a very high potential of having more bill length as fliper length length as I observe from the graph.
+I found that Gentoo overall has a very high potential of having more bill length as fliper length length increases as I observe from the graph.
 
 
 #2 
