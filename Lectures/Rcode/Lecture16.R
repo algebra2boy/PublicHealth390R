@@ -59,3 +59,60 @@ semi_join(flights, airports,  by = c("dest" = "faa")) %>%
   group_by(dest) %>% 
   summarise(n = n()) %>% 
   summarise(n = n())
+
+cases <- tribble(
+  ~country, ~"2011", ~"2012",~"2013",
+  "FR",  7000, 6900, 7000,
+  "DE",  5800, 6000, 6200,
+  "US", 15000,14000,13000
+)
+
+cases
+
+cases %>% pivot_longer(2:4, names_to = "year", values_to = "n")
+
+cases %>% pivot_longer(c("2011","2012","2013"), 
+                       names_to = "year", values_to  = "n" )
+cases %>% pivot_longer( -1, names_to  = "year", values_to = "n")
+cases %>% pivot_longer( -country, names_to = "year", values_to = "n")
+cases %>% pivot_longer(starts_with("2"), names_to = "year",
+                       values_to = "n")
+
+pollution <- tribble(
+  ~city,   ~size, ~amount, 
+  "New York", "large",     23,
+  "New York", "small",     14,
+  "London", "large",       22,
+  "London", "small",       16,
+  "Beijing", "large",      121,
+  "Beijing", "small",      56
+)
+
+
+pollution %>% pivot_wider(names_from = size, values_from = amount)
+
+names(who) <- str_replace(names(who), "newrel", "new_rel")
+
+who %>% group_by(country) %>% 
+  summarise(n_iso = n_distinct(iso2, iso3)) %>% 
+  filter(n_iso != 1)
+
+who %>% pivot_longer(5:60, names_to = "codes", values_to = "n")
+
+who %>% pivot_longer(5:60, names_to = "codes", values_to = "n" ) %>% 
+  select(-iso2,-iso3) %>% 
+  separate(codes,into = c("new", "type", "sexage"), sep = "_")
+
+who %>% pivot_longer(5:60, names_to = "codes", values_to = "n" ) %>% 
+  select(-iso2,-iso3) %>% 
+  separate(codes,into = c("new", "type", "sexage"), sep = "_") %>% 
+  separate(sexage,into = c("sex", "age"), sep = 1)
+
+who %>%
+  pivot_longer(5:60, names_to = "codes", values_to = "n" ) %>%
+  select(-iso2, -iso3) %>%
+  separate(codes, c("new", "type", "sexage"), sep = "_") %>%
+  select(-new) %>%
+  separate(sexage, into = c("sex", "age"), sep = 1,convert=TRUE) %>%
+  unite("sexage2", sex, age, sep = "-")
+
