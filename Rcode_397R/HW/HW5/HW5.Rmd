@@ -1,0 +1,37 @@
+---
+title: "HW5"
+author: "Yongye Tan"
+date: "2022-11-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# General Social Survey
+```{r}
+gss_cat %>%
+  ggplot(aes(x = rincome)) +
+  geom_bar()
+```
+
+
+## a 
+  The x axis label makes the default bar chart hard to understand. The label for some of the incomes are on top of those of other incomes, or the incomes are too long, which occupies the entire section.
+  
+## b
+``` {r one_b}
+# 1. remove the rows with value "not applicable"
+applicable_gss_cat <- gss_cat %>% filter(rincome != 'Not applicable')
+
+# 2. rename “Lt $1000” to “Less than $1000”
+# a warning will occur if we try to attempt to add a value to a factor variable in R that does not already exist, so we have to convert the factor variable to a character variable
+
+applicable_gss_cat$rincome <- as.character(applicable_gss_cat$rincome)
+# alter the data
+applicable_gss_cat$rincome[applicable_gss_cat$rincome == "Lt $1000"] <- "Less than $1000"
+# convert the variable back to factor
+applicable_gss_cat$rincome <- as.factor(applicable_gss_cat$rincome)
+```
