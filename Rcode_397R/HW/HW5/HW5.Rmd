@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+options(dplyr.summarise.inform = FALSE)
 library(tidyverse)
 ```
 
@@ -34,4 +35,115 @@ applicable_gss_cat$rincome <- as.character(applicable_gss_cat$rincome)
 applicable_gss_cat$rincome[applicable_gss_cat$rincome == "Lt $1000"] <- "Less than $1000"
 # convert the variable back to factor
 applicable_gss_cat$rincome <- as.factor(applicable_gss_cat$rincome)
+
+# 3. use color to distinguish non-response categories (“Refused”, “Don’t know”, and “No answer”) from income levels (“Lt $1000”, …)
+
+applicable_gss_cat <- applicable_gss_cat %>% mutate(indicator = case_when(applicable_gss_cat$rincome %in% c("Refused", "Don't know", "No answer") ~ 0,
+                                                    !(applicable_gss_cat$rincome %in% c("Refused", "Don't know", "No answer")) ~1
+                                                                          )
+                                                    )
+
+# rearrange the level of the rincome 
+applicable_gss_cat$rincome <- factor(applicable_gss_cat$rincome, levels=c( "Less than $1000", "$1000 to 2999", "$3000 to 3999",
+                                                                           "$4000 to 4999",  "$5000 to 5999", "$6000 to 6999",
+                                                                           "$7000 to 7999",  "$8000 to 9999", "$10000 - 14999", "$15000 - 19999", 
+                                                                           "$20000 - 24999", "$25000 or more", "Refused", "Don't know", "No answer"))
+
+  ggplot(applicable_gss_cat, aes(x = fct_rev(rincome))) +
+  geom_bar(aes(fill = indicator)) + 
+  # 4. add meaningful y- and x-axis titles
+  labs(
+    y = "Number of Respondents",
+    x = "Respondent's income"
+  ) +  
+  coord_flip() + 
+  theme(legend.position = "none")
+  
+
+```
+
+
+
+# who data 
+```{r}
+names(who) <- str_replace(names(who), "newrel", "new_rel")
+who2 <- who %>%
+  pivot_longer(5:60, names_to="codes", values_to="case" ) %>%
+  select(-iso2, -iso3) %>%
+  separate(codes, c("new", "type", "sexage"), sep = "_") %>%
+  select(-new) %>%
+  separate(sexage, into = c("sex", "age"), sep = 1,convert=TRUE)
+
+who
+who2
+```
+
+## a
+```{r}
+# how many zero value in the "case" column
+sum(who2$case==0,na.rm=TRUE)
+print("I check the number of zeros in the case variable is 11080, meaning there are 11080 missing values that WHO does not have data")
+```
+
+
+## b
+```{r}
+sorted_by_year_year_who2 <- who2 %>% group_by(year, sex) %>% 
+  # sum up the case, and remove the na values
+  summarise(total = sum(case, na.rm = TRUE))
+
+sorted_by_year_year_who2 <- sorted_by_year_year_who2 %>% mutate(sex = 
+  case_when(sex == 'f' ~ "female", sex == 'm' ~ "male")
+)
+
+ggplot(data = sorted_by_year_year_who2,
+       mapping = aes(x = year, y = total, color = sex)) +
+geom_line() + 
+scale_fill_discrete(name = "sex",
+                    labels = c("female", "male")) + 
+labs(title = "total number of cases of TB",
+     x = "year", 
+     y = "total") + 
+  theme(plot.title = element_text(hjust = 0.5, face = "bold")) 
+  
+```
+
+I found there is a tremendous amount of increase in terms of the total number of cases of TB since 1995 for both genders. Since then, the cases grew exponentially and it had been slowly decreasing since 2010. What is going on in 1995???
+
+## b
+```{r}
+sorted_by_age_group <- who2 %>% group_by(year, age, sex) %>% 
+  summarise(total = sum(case, na.rm = TRUE))
+
+sorted_by_age_group <- sorted_by_age_group %>% mutate(sex = 
+  case_when(sex == 'f' ~ "female", sex == 'm' ~ "male"))
+
+sorted_by_age_group <- sorted_by_age_group %>% mutate(age = case_when(
+  age == 14 ~ "0-14", age == 65 ~ "65-", age == 1524 ~ "15-24",age == 2534 ~ "25-34",
+  age == 3544 ~ "35-44", age == 4554 ~ "45-54", age == 5564 ~ "55-64"))
+                                 
+ggplot(data = sorted_by_age_group,
+       # group and color are important to categorize and map color to each age group
+  mapping = aes(x = year, y = total, group = age, color = age)) +
+  geom_line() +
+  facet_grid(~sex) + labs(title = "total number of cases of TB between female and male") 
+```
+
+## D
+```{r}
+sorted_by_age_group_densed <- who2 %>% group_by(year, age, sex) %>% 
+  summarise(total = sum(case, na.rm = TRUE))
+
+sorted_by_age_group_densed <- sorted_by_age_group_densed %>% mutate(sex = 
+  case_when(sex == 'f' ~ "female", sex == 'm' ~ "male"))
+
+sorted_by_age_group_densed <- sorted_by_age_group_densed %>% mutate(age = case_when(
+  age == 14 ~ "0-14", age == 65 ~ "65-", age == 1524 ~ "15-24",age == 2534 ~ "25-44",
+  age == 3544 ~ "25-44", age == 4554 ~ "45-64", age == 5564 ~ "45-64"))
+                                 
+ggplot(data = sorted_by_age_group_densed,
+       # group and color are important to categorize and map color to each age group
+  mapping = aes(x = year, y = total, group = age, color = age)) +
+  geom_line() +
+  facet_grid(~sex) + labs(title = "total number of cases of TB between female and male")
 ```
