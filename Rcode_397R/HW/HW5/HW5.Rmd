@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 options(dplyr.summarise.inform = FALSE)
 library(tidyverse)
+library(nycflights13)
 ```
 
 # General Social Survey
@@ -49,14 +50,13 @@ applicable_gss_cat$rincome <- factor(applicable_gss_cat$rincome, levels=c( "Less
                                                                            "$7000 to 7999",  "$8000 to 9999", "$10000 - 14999", "$15000 - 19999", 
                                                                            "$20000 - 24999", "$25000 or more", "Refused", "Don't know", "No answer"))
 
-  ggplot(applicable_gss_cat, aes(x = fct_rev(rincome))) +
+  ggplot(applicable_gss_cat, aes(y = fct_rev(rincome))) +
   geom_bar(aes(fill = indicator)) + 
   # 4. add meaningful y- and x-axis titles
   labs(
-    y = "Number of Respondents",
-    x = "Respondent's income"
+    x = "Number of Respondents",
+    y = "Respondent's income"
   ) +  
-  coord_flip() + 
   theme(legend.position = "none")
   
 
@@ -110,7 +110,8 @@ labs(title = "total number of cases of TB",
 
 I found there is a tremendous amount of increase in terms of the total number of cases of TB since 1995 for both genders. Since then, the cases grew exponentially and it had been slowly decreasing since 2010. What is going on in 1995???
 
-## b
+
+## c
 ```{r}
 sorted_by_age_group <- who2 %>% group_by(year, age, sex) %>% 
   summarise(total = sum(case, na.rm = TRUE))
@@ -121,7 +122,8 @@ sorted_by_age_group <- sorted_by_age_group %>% mutate(sex =
 sorted_by_age_group <- sorted_by_age_group %>% mutate(age = case_when(
   age == 14 ~ "0-14", age == 65 ~ "65-", age == 1524 ~ "15-24",age == 2534 ~ "25-34",
   age == 3544 ~ "35-44", age == 4554 ~ "45-54", age == 5564 ~ "55-64"))
-                                 
+     
+                            
 ggplot(data = sorted_by_age_group,
        # group and color are important to categorize and map color to each age group
   mapping = aes(x = year, y = total, group = age, color = age)) +
@@ -129,7 +131,10 @@ ggplot(data = sorted_by_age_group,
   facet_grid(~sex) + labs(title = "total number of cases of TB between female and male") 
 ```
 
-## D
+## d
+
+I use two different methods to do this question: 
+
 ```{r}
 sorted_by_age_group_densed <- who2 %>% group_by(year, age, sex) %>% 
   summarise(total = sum(case, na.rm = TRUE))
@@ -140,10 +145,141 @@ sorted_by_age_group_densed <- sorted_by_age_group_densed %>% mutate(sex =
 sorted_by_age_group_densed <- sorted_by_age_group_densed %>% mutate(age = case_when(
   age == 14 ~ "0-14", age == 65 ~ "65-", age == 1524 ~ "15-24",age == 2534 ~ "25-44",
   age == 3544 ~ "25-44", age == 4554 ~ "45-64", age == 5564 ~ "45-64"))
-                                 
+         
+                        
 ggplot(data = sorted_by_age_group_densed,
        # group and color are important to categorize and map color to each age group
   mapping = aes(x = year, y = total, group = age, color = age)) +
   geom_line() +
   facet_grid(~sex) + labs(title = "total number of cases of TB between female and male")
 ```
+
+I found the number of people from age group 45-64 increases exponetially as year goes on. Also, man has more cases than female, meaning male is more likely to get TB.
+```{r}
+who2$age <- as.character(who2$age)
+who2$age <- factor(who2$age, levels = c("14", "1524", "2534", "3544", "4554", "5564", "65"))
+
+who2 %>% group_by(year, age, sex) %>% 
+  summarise(total = sum(case, na.rm = TRUE)) %>% 
+  mutate(age = fct_collapse(age, 
+         "0-14" = "14", 
+         "15-24" = "1524",
+         "25-44" = c("2534", "3544"),
+         "45-64" = c("4554", "5564"),
+         "65-" = "65"
+  )) %>% 
+  ggplot(mapping = aes(x = year, y = total, group = age, color = age)) + 
+  geom_line() + 
+  facet_grid(~sex) + labs(title = "total number of cases of TB between female and male")
+```
+
+# More and more on flights
+## a
+```{r}
+a<- airports %>%
+  semi_join(flights, c("faa" = "dest")) %>%
+  ggplot(aes(lon, lat))+
+  geom_point()
+```
+
+The above code uses the airports and flights dataset. It extracts cases from the airports dataset when the row of "faa" in airports has a match with the row of "dest" in flights dataset. After that, it visualizes a scatter plot graph of their geographic coordinates where x-axis is the longitude, and y-axis is the latitude. In other words, it is a scatter plot contains geographic coordinates of airports where NYC flights fly to as destination.
+
+
+## b
+```{r}
+airports %>%
+  semi_join(flights, c("faa" = "dest")) %>%
+  ggplot(aes(lon, lat)) +
+  borders("state") +
+  geom_point() +
+  coord_quickmap()
+```
+```{r}
+# 1. compute the average arrival delay by destinations from the flights data 
+  # Since semi_join finds all the airport, we can group by the dest to find all the airport
+  flights %>% group_by(dest) %>% 
+    # remove all the NA values
+  summarise(delay = mean(arr_delay, na.rm = TRUE)) %>% 
+  # 2. join on the airports data to get the longitude and latitude of each destination
+  inner_join(airports, by = c(dest = "faa")) %>% 
+  # 3. plot each destination with tje average arrival data mapping to the size or color aesthetic
+  ggplot(aes(lon, lat, color = delay)) + 
+  # 4. add the borders of the states and change the coordinate using coord_quickmap()
+  borders("state") +
+  geom_point() +
+  coord_quickmap()
+
+```
+
+
+
+## c
+We need to first get the longitude and latitude of the origin and destination of each flight. 
+
+```{r}
+# inner join prevents missing value from both data set
+flights %>% 
+  # 1. # Join flights on airports by origin to get the longitude and latitude of the origin
+  # retains origin from both data set
+  inner_join(airports, by = c("origin" = "faa")) %>% 
+  # 2. Then join flights on airports by destination to get the longitude and latitude of the origin
+  # retains destination from both data set
+  inner_join(airports, by = c("dest" = "faa"))
+  
+```
+
+## d
+```{r }
+flights %>% 
+  inner_join(airports, by = c("origin" = "faa")) %>% 
+  inner_join(airports, by = c("dest" = "faa")) %>% 
+  # 1. use slice(1:100) to extract the first 100 rows from the data obtained in (c)
+  slice(1:100) %>% 
+  # 2. use geom_segment to draw the route for each flight. Check arrow argument to adjust the size of the arrow
+  ggplot(mapping = aes(x = lon.x, y = lat.x, xend = lon.y, yend = lat.y)) +  
+  geom_segment(size = 0.3, arrow = arrow(length = unit(0.2, "cm"))) + 
+  # 3. add the borders of the states and change the coordinate using coord_quickmap()
+  borders("state") + 
+  coord_quickmap() + 
+  labs(x = "Lonitude", y = "Latitude")
+
+
+```
+
+
+## e Let’s explore the relationship between the age of a plane (each plane is represented by tailnum) and its delay. The year variable in the planes data shows the year manufactured (so 2013-year is the age). 
+
+```{r}
+# 1.join flights on planes (note the flights also has a variable year)
+f <- flights %>% 
+  inner_join(planes,by = "tailnum") %>% 
+#2.calculate the age of the plane 
+  # year.x is the Year manufactured from plane data
+  # year.y is the year of departure for the flight
+  mutate(age = year.x - year.y) %>% 
+  # empty NA age
+  filter(!is.na(age)) %>% 
+  # Since there are more flights that has the same age
+  group_by(age) %>% 
+  #3. calculate the average departure delay and arrival delay by age 
+ summarise(avg_dep_delay = mean(dep_delay, na.rm = TRUE),
+           avg_arr_delay = mean(arr_delay, na.rm = TRUE)) %>% 
+  # 4 pivot longer the average arr_delay and dep_delay columns into a key:value column pair names type and delay
+  pivot_longer(2:3, names_to = "type", values_to = "delay_time" )
+
+# 5. recode the levels of type column to be “Departure” and “Arrival” 
+f$type <- recode(f$type, avg_dep_delay = "Departure", avg_arr_delay = "Arrival" )
+
+# 6. create the plot
+
+ggplot(data = f, mapping = aes(x = age , y = delay_time, color = type)) +
+  geom_point() +
+  geom_line() + 
+  labs( x = "age", 
+        y = "delay")
+```
+
+
+When age  >0 and age < 10, the delay increases rapidly. When the age > 10 and age < 20, the delay decreases at a big rate, slowing leveling it down around 20. This means the plane is new and starts to adjust the function.
+
+
