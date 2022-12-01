@@ -133,45 +133,35 @@ ggplot(data = sorted_by_age_group,
 
 ## d
 
-I use two different methods to do this question: 
-
 ```{r}
-sorted_by_age_group_densed <- who2 %>% group_by(year, age, sex) %>% 
-  summarise(total = sum(case, na.rm = TRUE))
-
-sorted_by_age_group_densed <- sorted_by_age_group_densed %>% mutate(sex = 
-  case_when(sex == 'f' ~ "female", sex == 'm' ~ "male"))
-
-sorted_by_age_group_densed <- sorted_by_age_group_densed %>% mutate(age = case_when(
-  age == 14 ~ "0-14", age == 65 ~ "65-", age == 1524 ~ "15-24",age == 2534 ~ "25-44",
-  age == 3544 ~ "25-44", age == 4554 ~ "45-64", age == 5564 ~ "45-64"))
-         
-                        
-ggplot(data = sorted_by_age_group_densed,
-       # group and color are important to categorize and map color to each age group
-  mapping = aes(x = year, y = total, group = age, color = age)) +
-  geom_line() +
-  facet_grid(~sex) + labs(title = "total number of cases of TB between female and male")
+who2 %>% 
+  filter(!is.na(case)) %>% 
+  mutate(sex = fct_recode(sex, "female" = "f", "male" = "m")) %>% 
+  # gives it a level and make it a str
+  mutate(age = factor(age)) %>% 
+  mutate(age = fct_recode(age, "0-14" = "14", "65-" = "65", 
+                          "15-24" = "1524", "25-34" = "2534",
+                          "35-44" = "3544", "45-54" = "4554",
+                          "55-64" = "5564")) %>% 
+  mutate(age = fct_collapse(age, "25-44" = c("25-34", "35-44") ,"45-64" = c("45-54", "55-64"))) %>% 
+  group_by(year, sex, age) %>% 
+  summarise(case = sum(case)) %>%  
+  ggplot(mapping = aes(year, case, color = age)) + 
+  geom_line() + 
+  facet_wrap(~sex) +
+  labs(x = "year",
+      y = "total",
+      title = "total number of cases of TB between female and male")
 ```
+
+
+
+
+
+
 
 I found the number of people from age group 45-64 increases exponetially as year goes on. Also, man has more cases than female, meaning male is more likely to get TB.
-```{r}
-who2$age <- as.character(who2$age)
-who2$age <- factor(who2$age, levels = c("14", "1524", "2534", "3544", "4554", "5564", "65"))
 
-who2 %>% group_by(year, age, sex) %>% 
-  summarise(total = sum(case, na.rm = TRUE)) %>% 
-  mutate(age = fct_collapse(age, 
-         "0-14" = "14", 
-         "15-24" = "1524",
-         "25-44" = c("2534", "3544"),
-         "45-64" = c("4554", "5564"),
-         "65-" = "65"
-  )) %>% 
-  ggplot(mapping = aes(x = year, y = total, group = age, color = age)) + 
-  geom_line() + 
-  facet_grid(~sex) + labs(title = "total number of cases of TB between female and male")
-```
 
 # More and more on flights
 ## a

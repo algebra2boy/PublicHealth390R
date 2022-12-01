@@ -38,6 +38,35 @@ imdb <- imdb %>%
 ## b
 ```{r}
 ggplot(data = imdb, 
-       mapping = aes(x = genres, y = averageRating)) + 
-  geom_bar()
+       mapping = aes(x = titleType, y = startYear)) + 
+  geom_boxplot() + 
+  labs (x = "Type", 
+        y = "year of the movie",
+        title = "Distribution of type of the movies vs the year released")
+
+# I found out that there are lots of movie outlier, and movie has the longest range among the three types. Movies are clustered around 1900 to 1930, but there weren't any movies between 1930 and 1975. tvEpisode emerges at the latest at around 2010, and it has the smallest  range and only outlier, which means it was not as popular as movie and tvSeries, whereas tvSeries has a lot of outliers closer to the tail of the boxplot, meaning it was getting popular and popular since it existed. 
+
+```
+
+## c
+```{r}
+
+imdb2 <- imdb %>% 
+  group_by(startYear) %>% 
+  summarise(avg_time = mean(runtimeMinutes, na.rm = TRUE)) 
+
+
+ggplot(data = imdb2, mapping = 
+         aes(x = startYear, y = avg_time)) + 
+  geom_point() + 
+  labs(x = "Year",
+       y = "average time of movie",
+       title = "Year vs duration of movie",
+       subtitle =  "Why do people like watching movies that last for 100 minutes?")
+
+```
+
+## d
+```{r}
+
 ```
