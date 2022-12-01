@@ -1,0 +1,43 @@
+---
+title: "HW6"
+author: "Yongye Tan"
+date: "2022-12-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# 1 IMDb data 
+
+```{r}
+imdb <- read.csv(file = "imdb_titles.csv")
+head(imdb)
+```
+## a
+```{r}
+# i.
+nrow(imdb)
+ncol(imdb)
+# There are 8007 observations and 8 variables i nteh dataset.
+
+# ii.
+summary(imdb)
+# There are 7334 missing endYear, 7 missing runtimeMinutes in the databset. 
+# How we should dael with them?
+# Since the endYear column have more than half of the values are missing, then this column does not have any substantial meaning to the dataset, I suggest that we drop this column. We can also drop the 7 missing runtimeMinutes since it does not have a huge impact on the entire dataset.
+
+imdb <- imdb %>%
+  select(primaryTitle, titleType, startYear,
+         runtimeMinutes, genres, averageRating, numVotes) %>% 
+  drop_na()
+```
+
+## b
+```{r}
+ggplot(data = imdb, 
+       mapping = aes(x = genres, y = averageRating)) + 
+  geom_bar()
+```
