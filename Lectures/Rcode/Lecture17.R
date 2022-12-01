@@ -43,4 +43,68 @@ eyes <- factor(x = c("blue", "green", "green"),
                levels = c("blue", "brown", "green"))
 
 gss_cat %>% 
-  filter(!is.na(tvhours)) 
+  filter(!is.na(tvhours)) %>% 
+  group_by(relig) %>% 
+  summarise(tvhours = mean(tvhours)) %>% 
+  ggplot(mapping = aes(tvhours, relig)) + 
+  geom_point()
+
+gss_cat %>% 
+  filter(!is.na(tvhours)) %>% 
+  group_by(relig) %>% 
+  summarise(tvhours = mean(tvhours)) %>% 
+  ggplot(mapping = aes(tvhours, fct_reorder(relig, tvhours, .fun = mean))) + 
+  geom_point()
+
+
+
+gss_cat %>% 
+  filter(!is.na(tvhours)) %>% 
+  group_by(marital) %>% 
+  summarise(tvhours = mean(tvhours)) %>% 
+  ggplot(mapping = aes(tvhours, fct_reorder(marital, tvhours, .fun = mean))) + 
+  geom_point()
+
+gss_cat %>%
+  filter(!is.na(tvhours)) %>%
+  group_by(partyid) %>%
+  summarise(tvhours = mean(tvhours)) %>%
+  ggplot(aes(tvhours, fct_reorder(partyid, tvhours))) +
+  geom_point() +
+  labs(y = "partyid")
+
+gss_cat %>%
+  filter(!is.na(tvhours)) %>%
+  mutate(partyid = fct_recode(partyid,
+                              "Republican, strong"    = "Strong republican",
+                              "Republican, weak"      = "Not str republican",
+                              "Independent, near rep" = "Ind,near rep",
+                              "Independent, near dem" = "Ind,near dem",
+                              "Democrat, weak"        = "Not str democrat",
+                              "Democrat, strong"      = "Strong democrat")) %>% 
+  group_by(partyid) %>%
+  summarize(tvhours = mean(tvhours)) %>%
+  ggplot(aes(tvhours, fct_reorder(partyid, tvhours))) +
+  geom_point() + labs(y = "partyid")
+
+
+gss_cat %>%
+  filter(!is.na(tvhours)) %>%
+  mutate(partyid = fct_collapse(partyid,
+                                "conservative" = c("Strong republican", 
+                                                   "Not str republican", 
+                                                   "Ind,near rep"),
+                                "liberal" = c("Strong democrat", 
+                                              "Not str democrat", 
+                                              "Ind,near dem"))) %>% 
+  group_by(partyid) %>%
+  summarize(tvhours = mean(tvhours)) %>%
+  ggplot(aes(tvhours, fct_reorder(partyid, tvhours))) +
+  geom_point() + labs(y = "partyid")
+
+# What is the best time of day to fly?
+flights %>% 
+  group_by(sched_dep_time) %>% 
+  summarize(arr_delay_avg = mean(arr_delay,na.rm=TRUE)) %>% 
+  ggplot(mapping = aes(x = sched_dep_time, y = arr_delay_avg)) + 
+  geom_point(alpha = 0.2) + geom_smooth()
