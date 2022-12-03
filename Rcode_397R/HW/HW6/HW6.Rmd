@@ -69,4 +69,145 @@ ggplot(data = imdb2, mapping =
 ## d
 ```{r}
 
+#i
+genre <- c()
+
+for (item in imdb$genres) {
+  genre <- append(genre, str_split(item, ","))
+}
+
+## unlist the vector of vector to vector 
+genre <- unlist(genre)
+total_unique_genre <- unique(genre)
+
+cat("These are all the genres:", total_unique_genre, "\n")
+cat("In total, there are", length(total_unique_genre), "different genres")
+
+
+#ii 
+# I found that the highest average rating has the genre Crime,Drama,Thriller has highest average rating 
+imdb %>% filter(averageRating == max(averageRating))
+# I found that the lowest average rating has the genre Crime,Drama,Thriller has highest average rating 
+imdb %>% filter(averageRating == min(averageRating))
+
+imdb %>% 
+  arrange(desc(averageRating)) %>% 
+  slice(1:150) %>% 
+  ggplot(mapping = aes(y = genres)) + 
+  geom_bar() 
+
+# I sort the first 150 highest average rating movie and find 
+# the count of them using a bar graph. I found that movie that has 
+# Crime, Drama, Thriller is the most population and has the highest 
+# rating, Action, Adventure, Drama ranks the second. I can predict 
+# if the movie has the keyword, "drama, action, adventure, crime, thriller" # would imply a high rating. 
+
+imdb %>% 
+  arrange(averageRating) %>% 
+  slice(1:20) %>% 
+  ggplot(mapping = aes(y = genres)) + 
+  geom_bar() 
+
+# I did the same process as the above, except this time I am sorting 
+# the 20 movies with the lowest rating. I found out that movie with "comedy"
+# and Documentary, Music" occurs the most and that means these two genres 
+# receive multiple low ratings and also would imply low box office. 
+
+
+```
+
+
+#2Suicide Data
+
+
+```{r}
+suicide <- read.csv(file = "master.csv")
+```
+
+##a 
+``` {r}
+#i how many observations and variables in the dataset?
+nrow(suicide)
+ncol(suicide)
+
+# There are 27820 observations and 12 variables in the databset
+
+#2
+summary(suicide)
+
+# I found out that only HDI. for. year has the missing value, and there are 19456 missing HDI. 
+# We can remove those rows if there are NA's, since we have 8364 left after removing, it should 
+# be enough to anaylze the data. HDI seems plays an important role in the dataset
+suicide_removeNA_HDI <- suicide %>% drop_na()
+
+
+# 3 
+# Yes there is some deterministic relationship between the variables. 
+# The country.year column is the concatenation of country and year. 
+# There is relationship between year and generation too, because the type of generation is determined by 
+# what year the person was born, (for example, Generation X is born between 1965 and 1981.)
+```
+
+## b
+``` {r}
+suicide_removeNA_HDI %>% 
+  group_by(year) %>% 
+  summarise(total = sum(suicides.100k.pop)) %>%  
+  ggplot (mapping = aes(x = year, y = total)) +
+  geom_line() + 
+  labs(x = "year", y = "total number of suicides per 100k population ",
+       title = "time trend of global suicide")
+
+# I used suicides/100k pop to describe the trend, because having a more dense variable that scan speak up # more volume about the trend. I found that suicide number increased exponentially before 2000 and later on
+# it has a constant slope of decrease between 2000 and 2005. Between 20005 and 2010, there is a constant 
+# number of suicide, which is around 11000.
+```
+
+```{r}
+suicide_removeNA_HDI %>% 
+  group_by(sex, age, year) %>% 
+  summarise(total = sum(suicides.100k.pop)) %>%  
+  ggplot (mapping = aes(x = year, y = total, group = age, color = age)) +
+  facet_grid(~sex) + 
+  geom_line() + 
+  labs(x = "year", y = "total number of suicides per 100k population ",
+       title = "time trend of global suicide")
+
+
+# I found that male has more cases of suicide across all age groups. I found in both gender,
+# people that is 75+ years has the highest number of suicide. What would old people tend to kill themselves?
+# Why could male to have more suicide than female?
+```
+``` {r}
+
+ggplot(data = suicide_removeNA_HDI, 
+       mapping = aes(y = suicides.100k.pop, x = gdp_per_capita....)) + 
+  geom_point() + 
+  geom_smooth() + 
+  labs(x = "gdp per capita", y = "suicide number per 100k population", title = "gdp vs suicide")
+
+# I found out that as gdb per capita increases, suicides number per 100 k population decreases. There are a lot of big clusters at small gdp. There are only a few cases with suicide at gdp greater than 100,000.
+
+# My question is does bigger gdp mean less likelihood of suicide incidents?
+
+# We know that HDI, Human Development Index, is the a summary measure of human development, telling us 
+# how much a country achieves in the aspects of health, knowledge and standard of living. If a country
+# has a high HDI, meaning it would have a high gdp. 
+
+# We first need to explore the relationship between HDI vs gdp
+ggplot(data = suicide_removeNA_HDI, 
+       mapping = aes(x = HDI.for.year, y = gdp_per_capita....)) + 
+  geom_point() + 
+  geom_smooth() + 
+  labs(x = "HDI", y = "gdp per capita")
+
+# After producing the graph, we found out that as HDI increases, the gdp increases exponentially, 
+# that means higher HDI implies higher gdp, meaning more wealth of the country. 
+
+# We can infer that if people live in a high gdp country, it is less likely to suicide. 
+# My prediction is there are less poverty and pressure for someone as they do not need to 
+# afford bills and worry about living constantly. If someone who live in dangerous country who 
+# face financial crisis, he/she would need worry about their life every day, therefore they 
+# have the feelings of freeing themselves by suiciding. 
+
 ```
